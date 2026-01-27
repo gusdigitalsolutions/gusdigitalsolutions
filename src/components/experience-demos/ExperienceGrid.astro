@@ -1,0 +1,67 @@
+---
+const experiences = [
+  {
+    title: 'Account Executive',
+    company: 'X (Twitter)',
+    description: 'Managed relationships with top-tier advertisers, driving revenue growth and adoption of new ad products during a period of significant platform evolution.',
+    tags: ['Enterprise Sales', 'Digital Advertising', 'Account Management'],
+  },
+  {
+    title: 'Growth Lead',
+    company: 'Crypto Startup',
+    date: '2020 - 2022',
+    description: 'Scaled assets under management from $100K to $2.5M. Led investor relations, developed go-to-market strategies, and built community engagement programs.',
+    tags: ['Crypto/Web3', 'AUM Growth', 'Investor Relations'],
+  },
+  {
+    title: 'Senior Sales Representative',
+    company: 'SaaS Enterprise',
+    date: '2015 - 2020',
+    description: "Achieved 180% quota attainment and President's Club Rookie of the Year. Generated $350K+ in annual revenue through strategic enterprise sales.",
+    tags: ["President's Club", '180% Quota', 'SaaS Sales'],
+  },
+  {
+    title: 'BS Information Sciences & Technology',
+    company: 'Penn State University',
+    date: 'Graduated',
+    description: 'Foundation in technology, systems thinking, and information management that continues to drive strategic decision-making.',
+    tags: ['IST', 'Technology'],
+  },
+];
+---
+
+<section class="py-12 bg-dark-900">
+  <div class="container mx-auto px-4">
+    <h3 class="text-2xl font-bold text-primary-400 mb-8 border-b border-primary-500/20 pb-2">Option 1: Modern Grid</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {experiences.map((exp) => (
+        <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700 hover:border-primary-500/50 transition-colors group">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h4 class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors">{exp.title}</h4>
+              <p class="text-primary-500 font-medium">{exp.company}</p>
+            </div>
+            {exp.date && (
+              <span class="text-xs bg-dark-900 text-dark-400 px-3 py-1 rounded-full border border-dark-700">
+                {exp.date}
+              </span>
+            )}
+          </div>
+          
+          <p class="text-dark-300 mb-6 leading-relaxed">
+            {exp.description}
+          </p>
+          
+          <div class="flex flex-wrap gap-2">
+            {exp.tags.map(tag => (
+              <span class="px-3 py-1 text-xs rounded-full bg-dark-900 text-dark-400 border border-dark-700/50">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

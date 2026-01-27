@@ -1,0 +1,151 @@
+---
+import { ProjectCard } from './ProjectCard';
+import { ProjectGallery } from './ProjectGallery';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  withCardBackground?: boolean;
+}
+
+const { withCardBackground = false } = Astro.props;
+
+const portfolioImages = [
+  'IMG_2710.png',
+  'lightcloud5132_Bold_graphic_poster_for_a_music_festival_strong__058ddf80-fb43-410f-b291-d5fab5978422.png',
+  'lightcloud5132_Both_characters_walk_forward_in_slow_motion_with_64cbbe77-6f92-4669-a333-5094d88f8eba.png',
+  'lightcloud5132_Cafe_laptop_work_from_anywhere_attractive_girl_w_e3dbdadb-da5b-40b6-a58e-5ccf33674dc6.png',
+  'lightcloud5132_Cinematic_portrait_of_a_street_dancer_in_New_Yor_6ac67d59-4a59-4b92-9087-60bc060579a0.png',
+  'lightcloud5132_Cyberpunk_street_market_in_the_rain_dense_crowd__a20dfb49-9d65-4444-8f96-59652fac8571.png',
+  'lightcloud5132_D_Pixar-style_character_turnaround_of_a_curious__d8b6ff1f-06f9-4dff-8ea0-dab1ff0af0cf.png',
+  'lightcloud5132_Dark_forest_with_bioluminescent_plants_and_a_lon_11c0efc6-1264-4258-bb30-055034755e18.png',
+  'lightcloud5132_Dynamic_anime-style_illustration_of_a_cyberpunk__4846b6cc-7493-4528-a3b0-a5e6f87da87f.png',
+  'lightcloud5132_Graffiti_mural_on_a_brick_wall_showing_a_roaring_ea5ff3f0-54ee-4499-b3df-197818cc49cb.png',
+  'lightcloud5132_Gym_squat__strength_ad_strong_fitness_girl_in_a__0147e4da-29a0-4f6a-a3c7-98757b1958db.png',
+  'lightcloud5132_Lipstick_application_close-up_beautiful_young_wo_1b205d52-efba-4832-87d0-79396dc048d1.png',
+  'lightcloud5132_Portrait_that_dissolves_into_glitch_fragments_an_8dc81c09-a4aa-4443-928b-389090d3393a.png',
+  'lightcloud5132_Product_shot_of_a_futuristic_sneaker_on_a_wet_re_3e249cc9-46ad-4951-8b86-0e868fa76bb0.png',
+  'lightcloud5132_Renaissance-style_portrait_of_a_modern_woman_in__ffdcfce6-a6e6-4205-9fe3-3852a659ba18.png',
+  'lightcloud5132_Rooftop_spin_in_dress_trendy_hot_girl_in_a_flowy_2af8ca77-cf6c-4a41-9279-94f8b53639d3.png',
+  'lightcloud5132_Soft_pastel_anime_slice-of-life_scene_of_two_fri_6447614a-cdc7-4646-b12f-489c567c3d40.png',
+  'lightcloud5132_Sunrise_beach_jog_fit_hot_girl_jogging_along_the_8ef722a4-df7d-49f7-a347-c06ea1aa8b3c.png',
+  'lightcloud5132_Whimsical_cartoon_city_street_at_golden_hour_rou_40498cfb-2808-4a26-a527-abfffcb78f97.png',
+  'lightcloud5132_a_really_cool_picture_cute_adorable_cat_e9f9c989-0e80-4711-ba9f-25dfc59c7dcd.png',
+  'lightcloud5132_a_really_cool_picture_of_a_dog_b95efa7d-4f3e-454b-8397-9432e9d0598e.png',
+  'lightcloud5132_both_runners_with_natural_jogging_motion_arms_pu_447e4e5b-650f-4d36-8220-595ea8129ba3.png',
+  'lightcloud5132_confident_fit_girl_in_sleek_black_athleisure_wal_e1fb7d82-28ef-4ca3-b095-23a005d60ce9.png',
+  'lightcloud5132_sleek_wireless_gaming_headset_floating_in_dark_v_c54cb27e-e65d-4440-a937-54f6b1b01b64.png'
+];
+---
+
+<div id="portfolio-component" class:list={["w-full", withCardBackground ? "pt-0 pb-24 bg-dark-900/40 rounded-[3rem] border border-white/5 backdrop-blur-xl px-3 shadow-2xl relative overflow-hidden mt-0 mb-12" : ""]}>
+  {withCardBackground && (
+    <>
+      <div class="absolute top-0 right-0 w-[40%] h-[40%] bg-primary-600/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div class="absolute bottom-0 left-0 w-[40%] h-[40%] bg-purple-600/5 rounded-full blur-[120px] pointer-events-none"></div>
+    </>
+  )}
+
+  <SectionHeader
+    title="See My"
+    titleAccent="Work"
+    description="Video Generation • Content Creation • AI Art • Web Design"
+    className="mb-8 md:mb-12"
+  />
+  
+  <div id="portfolio-container" class="relative w-full group py-4">
+    <!-- Scroll Buttons -->
+    <button 
+      id="scroll-left" 
+      class="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 bg-dark-900/40 border border-white/10 hover:border-primary-500/50 rounded-2xl flex items-center justify-center text-white transition-all opacity-40 hover:opacity-100 backdrop-blur-xl shadow-2xl md:translate-x-0 -translate-x-2"
+      aria-label="Scroll left"
+    >
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <button 
+      id="scroll-right" 
+      class="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-14 md:h-14 bg-dark-900/40 border border-white/10 hover:border-primary-500/50 rounded-2xl flex items-center justify-center text-white transition-all opacity-40 hover:opacity-100 backdrop-blur-xl shadow-2xl md:translate-x-0 translate-x-2"
+      aria-label="Scroll right"
+    >
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+
+    <div id="portfolio-track" class="flex gap-6 md:gap-10 overflow-x-auto pb-12 px-6 md:px-10 scrollbar-hide scroll-smooth relative z-10">
+      {[...portfolioImages, ...portfolioImages, ...portfolioImages].map((src, index) => (
+        <div class="relative group/card flex-shrink-0">
+          <div class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-purple-600 rounded-[2.2rem] blur opacity-0 group-hover/card:opacity-20 transition duration-1000"></div>
+          <img
+            src={`/assets/portfolio/${src}`}
+            alt={`Creative work sample ${index + 1}`}
+            class="w-[300px] h-[450px] md:w-[550px] md:h-[350px] lg:w-[750px] lg:h-[450px] object-cover rounded-[2rem] border-2 border-white/5 group-hover/card:border-primary-500/50 group-hover/card:scale-[1.02] transition-all duration-700 ease-out shadow-2xl"
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Hide scrollbar */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+<script>
+  const track = document.getElementById('portfolio-track');
+  const container = document.getElementById('portfolio-container');
+  const btnLeft = document.getElementById('scroll-left');
+  const btnRight = document.getElementById('scroll-right');
+
+  let animationId;
+  let isPaused = false;
+  const speed = 2.5;
+
+  if (track && container && btnLeft && btnRight) {
+    btnLeft.addEventListener('click', (e) => {
+      e.stopPropagation();
+      track.scrollBy({ left: -500, behavior: 'smooth' });
+    });
+
+    btnRight.addEventListener('click', (e) => {
+      e.stopPropagation();
+      track.scrollBy({ left: 500, behavior: 'smooth' });
+    });
+
+    const autoScroll = () => {
+      if (!isPaused) {
+        const sectionWidth = track.scrollWidth / 3;
+        if (track.scrollLeft >= sectionWidth * 2) {
+          track.scrollLeft -= sectionWidth; 
+        } else {
+          track.scrollLeft += speed;
+        }
+      }
+      animationId = requestAnimationFrame(autoScroll);
+    };
+
+    // Initialize in the middle
+    track.scrollLeft = track.scrollWidth / 3;
+
+
+    animationId = requestAnimationFrame(autoScroll);
+
+    container.addEventListener('mouseenter', () => isPaused = true);
+    container.addEventListener('mouseleave', () => isPaused = false);
+    
+    container.addEventListener('touchstart', () => isPaused = true);
+    container.addEventListener('touchend', () => {
+        setTimeout(() => isPaused = false, 1000);
+    });
+  }
+</script>

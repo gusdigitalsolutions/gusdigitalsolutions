@@ -1,0 +1,216 @@
+---
+import TypewriterText from './TypewriterText';
+
+const portfolioImages = [
+  'IMG_2710.png',
+  'lightcloud5132_Bold_graphic_poster_for_a_music_festival_strong__058ddf80-fb43-410f-b291-d5fab5978422.png',
+  'lightcloud5132_Both_characters_walk_forward_in_slow_motion_with_64cbbe77-6f92-4669-a333-5094d88f8eba.png',
+  'lightcloud5132_Cafe_laptop_work_from_anywhere_attractive_girl_w_e3dbdadb-da5b-40b6-a58e-5ccf33674dc6.png',
+  'lightcloud5132_Cinematic_portrait_of_a_street_dancer_in_New_Yor_6ac67d59-4a59-4b92-9087-60bc060579a0.png',
+  'lightcloud5132_Cyberpunk_street_market_in_the_rain_dense_crowd__a20dfb49-9d65-4444-8f96-59652fac8571.png',
+  'lightcloud5132_D_Pixar-style_character_turnaround_of_a_curious__d8b6ff1f-06f9-4dff-8ea0-dab1ff0af0cf.png',
+  'lightcloud5132_Dark_forest_with_bioluminescent_plants_and_a_lon_11c0efc6-1264-4258-bb30-055034755e18.png',
+  'lightcloud5132_Dynamic_anime-style_illustration_of_a_cyberpunk__4846b6cc-7493-4528-a3b0-a5e6f87da87f.png',
+  'lightcloud5132_Graffiti_mural_on_a_brick_wall_showing_a_roaring_ea5ff3f0-54ee-4499-b3df-197818cc49cb.png',
+  'lightcloud5132_Gym_squat__strength_ad_strong_fitness_girl_in_a__0147e4da-29a0-4f6a-a3c7-98757b1958db.png',
+  'lightcloud5132_Lipstick_application_close-up_beautiful_young_wo_1b205d52-efba-4832-87d0-79396dc048d1.png',
+  'lightcloud5132_Portrait_that_dissolves_into_glitch_fragments_an_8dc81c09-a4aa-4443-928b-389090d3393a.png',
+  'lightcloud5132_Product_shot_of_a_futuristic_sneaker_on_a_wet_re_3e249cc9-46ad-4951-8b86-0e868fa76bb0.png',
+  'lightcloud5132_Renaissance-style_portrait_of_a_modern_woman_in__ffdcfce6-a6e6-4205-9fe3-3852a659ba18.png',
+  'lightcloud5132_Rooftop_spin_in_dress_trendy_hot_girl_in_a_flowy_2af8ca77-cf6c-4a41-9279-94f8b53639d3.png',
+  'lightcloud5132_Soft_pastel_anime_slice-of-life_scene_of_two_fri_6447614a-cdc7-4646-b12f-489c567c3d40.png',
+  'lightcloud5132_Sunrise_beach_jog_fit_hot_girl_jogging_along_the_8ef722a4-df7d-49f7-a347-c06ea1aa8b3c.png',
+  'lightcloud5132_Whimsical_cartoon_city_street_at_golden_hour_rou_40498cfb-2808-4a26-a527-abfffcb78f97.png',
+  'lightcloud5132_a_really_cool_picture_cute_adorable_cat_e9f9c989-0e80-4711-ba9f-25dfc59c7dcd.png',
+  'lightcloud5132_a_really_cool_picture_of_a_dog_b95efa7d-4f3e-454b-8397-9432e9d0598e.png',
+  'lightcloud5132_both_runners_with_natural_jogging_motion_arms_pu_447e4e5b-650f-4d36-8220-595ea8129ba3.png',
+  'lightcloud5132_confident_fit_girl_in_sleek_black_athleisure_wal_e1fb7d82-28ef-4ca3-b095-23a005d60ce9.png',
+  'lightcloud5132_sleek_wireless_gaming_headset_floating_in_dark_v_c54cb27e-e65d-4440-a937-54f6b1b01b64.png'
+];
+---
+
+<section id="hero" class="relative w-full overflow-hidden flex flex-col items-center bg-transparent pt-16 md:pt-24 m-0 overflow-visible">
+  
+  <!-- BACKGROUND VIDEO (MAX VISIBILITY - MOBILE OPTIMIZED) -->
+  <div class="relative w-full h-auto md:h-[85vh] overflow-hidden m-0 p-0 z-10">
+    <video class="w-full h-auto md:h-full md:object-cover" autoplay muted loop playsinline style="filter: contrast(1.1) brightness(1.1);">
+      <source src="/assets/videos/gusdigital-hero-1080p.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  <!-- IDENTITY HUB (CLEAN TRANSITION BELOW VIDEO) -->
+  <div class="relative z-[100] w-full max-w-4xl mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-0 mb-0 overflow-visible">
+    <div class="glass-card rounded-[1.5rem] md:rounded-[3.5rem] border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.8)] backdrop-blur-3xl bg-dark-900/40 p-0.5 overflow-visible">
+      <div class="relative bg-dark-950/40 rounded-[1.3rem] md:rounded-[3.3rem] py-5 md:py-12 px-4 md:px-14 border border-white/5 overflow-visible">
+        
+        <!-- MOBILE: ROW LAYOUT | DESKTOP: ROW LAYOUT -->
+        <div class="flex flex-row lg:flex-row items-center justify-start lg:justify-center gap-4 md:gap-16 text-left">
+          
+          <!-- SMALLER PROFILE PHOTO -->
+          <div class="relative shrink-0 reveal">
+            <div class="absolute -inset-2 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full blur-[10px] opacity-20"></div>
+            <div class="relative w-14 h-14 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full p-0.5 bg-gradient-to-tr from-white/10 via-blue-500/20 to-white/10 shadow-2xl overflow-hidden border border-white/5">
+              <img src="/assets/profile.jpg" alt="Gustavo" class="w-full h-full rounded-full object-cover grayscale transition-all duration-1000" />
+            </div>
+          </div>
+            
+          <!-- CONTENT HUB (TIGHTENED) -->
+          <div class="flex flex-col items-start lg:items-start reveal flex-1">
+            
+            <!-- NAME (TIGHTER) -->
+            <h1 class="text-xl xs:text-2xl md:text-5xl lg:text-6xl text-white font-black tracking-tighter leading-[0.9] mb-1 md:mb-3">
+              Gustavo <span class="text-cyan-400 font-extrabold">Vasquez</span>
+            </h1>
+ 
+            <!-- SEE MY WORK (MORE CONTAINED) -->
+            <div class="hidden md:block mb-3 md:mb-4 group/work">
+              <h2 class="text-lg md:text-2xl lg:text-3xl font-black text-white tracking-tight italic uppercase flex items-center gap-3">
+                <span class="opacity-80">See My</span>
+                <span class="text-cyan-400">Work</span>
+                <div class="h-1 w-8 bg-blue-500 rounded-full hidden lg:block group-hover/work:w-16 transition-all duration-500"></div>
+              </h2>
+            </div>
+ 
+            <!-- EXPERT BADGE (HORIZONTAL & TIGHT) -->
+            <div class="flex items-center gap-1.5 py-1.5 px-3 bg-white/5 rounded-full border border-white/10 backdrop-blur-md mb-2 md:mb-5 transform-none rotate-0 min-w-[220px] md:min-w-[280px]">
+              <span class="text-dark-300 text-[8px] md:text-[10px] font-bold uppercase tracking-widest opacity-60">Expert in:</span>
+              <TypewriterText client:load className="text-secondary-400 text-[8px] md:text-[10px] font-black uppercase tracking-widest whitespace-nowrap" words={['Marketing', 'SEO', 'Shopify', 'Web Design']} />
+            </div>
+
+            <!-- CTA BUTTON -->
+             <a href="https://calendly.com/gus-gusdigitalsolutions/30min" target="_blank" rel="noopener noreferrer" 
+                class="group relative inline-flex items-center gap-2 px-4 md:px-8 py-2 md:py-3.5 bg-gradient-to-r from-primary-600 via-blue-500 to-cyan-500 hover:from-primary-500 hover:via-blue-400 hover:to-cyan-400 rounded-full text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(59,130,246,0.5)] border border-white/30">
+              <span class="relative font-black uppercase tracking-wide text-[8px] xs:text-[9px] md:text-xs whitespace-nowrap">Hire Me for Anything Tech</span>
+              <svg class="w-3 h-3 md:w-4 md:h-4 shrink-0 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- THE GALLERY HUB -->
+  <div id="portfolio" class="w-full m-0 p-0 relative group/portfolio bg-dark-950">
+    <!-- NAVIGATION ARROWS -->
+    <button id="gl-btn-L" class="absolute left-6 md:left-24 top-1/2 -translate-y-1/2 z-50 w-20 h-20 md:w-28 md:h-28 rounded-full bg-dark-950/90 border border-white/10 text-white flex items-center justify-center opacity-0 group-hover/portfolio:opacity-100 transition-all duration-500 backdrop-blur-3xl hover:bg-white hover:text-dark-950 shadow-3xl">
+      <svg class="w-10 h-10 md:w-14 md:h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button id="gl-btn-R" class="absolute right-6 md:right-24 top-1/2 -translate-y-1/2 z-50 w-20 h-20 md:w-28 md:h-28 rounded-full bg-dark-950/90 border border-white/10 text-white flex items-center justify-center opacity-0 group-hover/portfolio:opacity-100 transition-all duration-500 backdrop-blur-3xl hover:bg-white hover:text-dark-950 shadow-3xl">
+      <svg class="w-10 h-10 md:w-14 md:h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <div id="gl-container" class="relative w-full overflow-hidden p-0 m-0 leading-none">
+      <div id="gl-track" class="flex gap-10 md:gap-24 px-0 py-16 md:py-32 m-0 items-center cursor-grab active:cursor-grabbing select-none transition-none" style="touch-action: none; will-change: transform;">
+        {portfolioImages.map((src) => (
+          <div class="gl-item relative flex-shrink-0 p-0 m-0 leading-normal">
+            <div class="relative w-[340px] h-[400px] md:w-[750px] md:h-[550px] lg:w-[1100px] lg:h-[700px] rounded-3xl md:rounded-[6rem] overflow-hidden border border-white/10 shadow-4xl group/card">
+              <img src={`/assets/portfolio/${src}`} class="w-full h-full object-cover scale-100 group-hover/card:scale-105 transition-transform duration-[4000ms]" draggable="false" loading="eager" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10 opacity-70 pointer-events-none"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .glass-card { background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.5)); }
+  #gl-track { transition: transform 0.1s linear; }
+</style>
+
+<script>
+  function spawnHeroSystem() {
+    const track = document.getElementById('gl-track');
+    const container = document.getElementById('gl-container');
+    const btnL = document.getElementById('gl-btn-L');
+    const btnR = document.getElementById('gl-btn-R');
+    if (!track || !container) return;
+
+    const baseItems = Array.from(track.children);
+    baseItems.forEach(item => track.appendChild(item.cloneNode(true)));
+    baseItems.forEach(item => track.appendChild(item.cloneNode(true)));
+
+    let currentX = 0;
+    let isPaused = false;
+    let isDragging = false;
+    let startX = 0;
+    let startTransform = 0;
+    const speed = 2.8; 
+
+    function recalibrate() {
+      const unit = track.scrollWidth / 3;
+      currentX = -unit;
+      track.style.transform = `translateX(${currentX}px)`;
+    }
+
+    function animate() {
+      if (!isPaused && !isDragging) {
+        currentX -= speed; 
+        const unit = track.scrollWidth / 3;
+        if (currentX <= -unit * 2) currentX = -unit;
+        track.style.transform = `translateX(${currentX}px)`;
+      }
+      requestAnimationFrame(animate);
+    }
+
+    const startDrag = (e: any) => {
+      isDragging = true;
+      startX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+      startTransform = currentX;
+      track.style.cursor = 'grabbing';
+    };
+
+    const moveDrag = (e: any) => {
+      if (!isDragging) return;
+      const x = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+      const walk = (x - startX) * 1.5;
+      currentX = startTransform + walk;
+      
+      const unit = track.scrollWidth / 3;
+      if (currentX >= 0) currentX -= unit;
+      if (currentX <= -unit * 2) currentX += unit;
+      
+      track.style.transform = `translateX(${currentX}px)`;
+    };
+
+    const handleEnd = () => {
+      isDragging = false;
+      track.style.cursor = 'grab';
+    };
+
+    track.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', moveDrag);
+    window.addEventListener('mouseup', handleEnd);
+    
+    track.addEventListener('touchstart', startDrag, { passive: true });
+    window.addEventListener('touchmove', moveDrag, { passive: true });
+    window.addEventListener('touchend', handleEnd);
+
+    container.addEventListener('mouseenter', () => isPaused = true);
+    container.addEventListener('mouseleave', () => isPaused = false);
+
+    btnL.onclick = () => { currentX += 800; };
+    btnR.onclick = () => { currentX -= 800; };
+
+    // Pause when tab is inactive
+    document.addEventListener('visibilitychange', () => {
+      isPaused = document.hidden;
+    });
+
+    // Check if mouse is already hovering
+    if (container.matches(':hover')) isPaused = true;
+
+    recalibrate();
+    requestAnimationFrame(animate);
+    window.addEventListener('resize', recalibrate);
+  }
+
+  // Robust initialization
+  if (document.readyState === 'complete') {
+    spawnHeroSystem();
+  } else {
+    window.addEventListener('load', spawnHeroSystem);
+  }
+</script>

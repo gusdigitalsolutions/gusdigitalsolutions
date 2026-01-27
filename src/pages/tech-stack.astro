@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SkillsSection from '../components/Skills.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<Layout title="Technology Stack | Gus Digital Solutions">
+  <main class="pt-28 md:pt-32">
+    <div class="bg-dark-900 py-12 md:py-16 text-center">
+      <h1 class="text-3xl md:text-6xl font-bold text-white mb-4 px-4">Technology Stack</h1>
+      <p class="text-dark-300 text-base md:text-lg max-w-2xl mx-auto px-4">
+        The modern tools and platforms I use to build scalable, high-performance solutions.
+      </p>
+    </div>
+
+    <SkillsSection />
+    
+    <section class="container mx-auto px-4 py-16">
+      <h2 class="text-2xl font-bold text-white text-center mb-12">Why This Tech Stack Matters</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="p-6 bg-dark-800/50 rounded-xl border border-dark-700">
+          <h3 class="text-xl font-bold text-primary-400 mb-3">Speed & Performance</h3>
+          <p class="text-dark-400 text-sm">Using Astro, React, and modern CDNs ensures your site loads instantly globally.</p>
+        </div>
+        <div class="p-6 bg-dark-800/50 rounded-xl border border-dark-700">
+          <h3 class="text-xl font-bold text-primary-400 mb-3">Scalability</h3>
+          <p class="text-dark-400 text-sm">Built on AWS and Cloud infrastructure that grows automatically with your traffic.</p>
+        </div>
+        <div class="p-6 bg-dark-800/50 rounded-xl border border-dark-700">
+          <h3 class="text-xl font-bold text-primary-400 mb-3">Automation First</h3>
+          <p class="text-dark-400 text-sm">Tools like n8n and Zapier mean less manual work and more revenue for you.</p>
+        </div>
+      </div>
+    </section>
+
+    <Contact />
+  </main>
+</Layout>

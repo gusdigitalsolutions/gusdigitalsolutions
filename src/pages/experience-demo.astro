@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ExperienceGrid from '../components/experience-demos/ExperienceGrid.astro';
+import ExperienceGlass from '../components/experience-demos/ExperienceGlass.astro';
+import ExperienceMinimal from '../components/experience-demos/ExperienceMinimal.astro';
+
+---
+
+<Layout title="Experience Section Options">
+  <main class="bg-black min-h-screen pt-20 pb-20">
+    <div class="container mx-auto px-4 mb-12 text-center">
+      <h1 class="text-4xl font-bold text-white mb-4">Experience Layout Options</h1>
+      <p class="text-dark-400">Scroll down to see different layout possibilities.</p>
+    </div>
+
+    <div class="space-y-24">
+      <ExperienceGrid />
+      <ExperienceGlass />
+      <ExperienceMinimal />
+    </div>
+    
+    <div class="container mx-auto px-4 mt-24 text-center">
+      <a href="/" class="btn btn-secondary">Back to Home</a>
+    </div>
+  </main>
+</Layout>

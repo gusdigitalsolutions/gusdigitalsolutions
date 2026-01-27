@@ -1,0 +1,129 @@
+---
+const faqs = [
+  {
+    question: "I'm not tech-savvy. Is that a problem?",
+    answer: "Not at all! That's exactly who I work with. You tell me what you want in plain English, and I handle all the technical stuff. No coding, no jargon, no headaches for you.",
+  },
+  {
+    question: 'How much does a website cost?',
+    answer: "It depends on what you need - every project is different. Contact me with what you're looking for and I'll give you a custom quote with no hidden fees.",
+  },
+  {
+    question: 'How long does it take to build a website?',
+    answer: "Most websites are ready in 3 days to a week. More advanced websites with custom features could take longer. I'll give you a timeline upfront and keep you updated along the way.",
+  },
+  {
+    question: 'Can I update the website myself later?',
+    answer: "Yes! I set up everything so you can make changes yourself - adding products, updating prices, posting news. I'll show you how it works. And if you ever get stuck, just call me.",
+  },
+  {
+    question: 'Do you speak Spanish?',
+    answer: "Si! I'm fluent in both English and Spanish. If you're more comfortable discussing your project in Spanish, no problem at all. I can also build bilingual websites for your business.",
+  },
+];
+---
+
+<section id="faq" class="pt-8 pb-16 relative reveal overflow-hidden">
+  <!-- Ambient Background -->
+  <div class="absolute inset-0 pointer-events-none opacity-20">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-600/5 rounded-full blur-[120px]"></div>
+    <div class="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] bg-[length:40px_40px] [mask-image:radial-gradient(white,transparent_70%)]"></div>
+  </div>
+
+  <div class="container relative z-10">
+    <!-- Section Header -->
+    <div class="text-center mb-16 space-y-4">
+      <p class="text-xs font-black text-primary-500 uppercase tracking-[0.3em]">Knowledge Base</p>
+      <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter">
+        Common Questions
+      </h2>
+      <p class="text-dark-400 text-lg md:text-xl max-w-2xl mx-auto">Everything you need to know before we start building your digital future.</p>
+    </div>
+
+    <!-- FAQ Grid/List -->
+    <div class="max-w-4xl mx-auto space-y-4">
+      {faqs.map((faq, index) => (
+        <details class="faq-item group relative overflow-hidden rounded-2xl bg-dark-800/20 border border-white/5 backdrop-blur-sm transition-all duration-500 hover:bg-dark-800/40 hover:border-primary-500/30" name="faq">
+          <summary class="flex items-center justify-between p-6 cursor-pointer list-none select-none">
+            <div class="flex items-center gap-6">
+              <span class="hidden md:block font-mono text-xs text-primary-500/50 font-bold">0{index + 1}</span>
+              <span class="text-lg md:text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-300">
+                {faq.question}
+              </span>
+            </div>
+            
+            <div class="faq-icon-wrapper relative w-10 h-10 flex items-center justify-center rounded-xl bg-dark-700/30 border border-white/5 transition-all duration-500 group-open:bg-primary-600/20 group-open:border-primary-500/50">
+              <svg
+                class="w-5 h-5 text-dark-400 transition-all duration-500 group-hover:text-primary-400 group-open:rotate-180 group-open:text-primary-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </summary>
+
+          <div class="faq-content overflow-hidden">
+            <div class="px-6 pb-8 md:pl-[5.5rem] md:pr-12 last:pb-8">
+              <!-- Separator Line -->
+              <div class="h-px w-full bg-gradient-to-r from-primary-500/20 via-transparent to-transparent mb-6"></div>
+              <p class="text-dark-300 text-lg leading-relaxed max-w-3xl">
+                {faq.answer.replace('Si!', 'Sí!')}
+              </p>
+            </div>
+          </div>
+
+          <!-- Bottom glow indicator on open -->
+          <div class="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-transparent via-primary-500 to-transparent w-full opacity-0 translate-y-1 group-open:opacity-100 group-open:translate-y-0 transition-all duration-700"></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Remove default summary marker */
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  details summary::marker {
+    display: none;
+  }
+
+  /* Grid expansion animation for content */
+  .faq-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .faq-item[open] .faq-content {
+    grid-template-rows: 1fr;
+  }
+
+  /* Reveal animation for the text itself */
+  .faq-content > div {
+    min-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .faq-item[open] .faq-content > div {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.1s;
+  }
+
+  /* Hover and active states */
+  .faq-item:hover {
+    box-shadow: 0 0 30px -10px rgba(59, 130, 246, 0.15);
+  }
+
+  .faq-item[open] {
+    border-color: rgba(59, 130, 246, 0.25);
+    background-color: rgba(17, 24, 39, 0.5);
+    box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.5);
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+interface Props {
+  className?: string;
+  iconClass?: string;
+  align?: 'left' | 'center' | 'right';
+}
+
+const { className = "", iconClass = "w-10 h-6", align = "center" } = Astro.props;
+
+const alignmentClass = align === 'left' ? 'justify-start' : align === 'right' ? 'justify-end' : 'justify-center';
+---
+
+<div class={`flex flex-wrap ${alignmentClass} gap-2 ${className}`}>
+  <!-- Visa -->
+  <div class={`${iconClass} bg-white/5 rounded px-1 flex items-center justify-center border border-white/10`} title="Visa">
+    <svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.748 18.238l1.684-10.428H9.764c-.604 0-1.077.382-1.32.969L5.34 16.277h3.696l.542-2.71h3.31l.312 1.543h2.646c-.37-.8-.867-2.618-1.098-2.872zm-2.905-4.498l1.868-4.997h.047l.955 4.997H7.843zM16.892 7.822h-2.66c-.82 0-1.428.423-1.724 1.138l-6.07 14.27H2.86l3.774-8.892L3.8 8.16C3.496 7.152 2.76 6.81 1.95 6.81H0v1.076c.407.098.882.164 1.355.334 1.144.428 1.487 1.258 1.63 1.95l2.67 10.37h5.132l7.98-18.918h-1.875zM24 7.81h-2.478c-.768 0-1.348.435-1.685 1.24L17.2 16.71l-2.46-12.72h-4.326l3.774 18.24h4.593L24 7.81z" fill="currentColor" opacity="0.8"/></svg>
+  </div>
+  <!-- MasterCard -->
+  <div class={`${iconClass} bg-white/5 rounded px-1 flex items-center justify-center border border-white/10`} title="MasterCard">
+    <svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="12" r="7" fill="#EB001B" fill-opacity="0.8"/><circle cx="17" cy="12" r="7" fill="#F79E1B" fill-opacity="0.8"/><path d="M12 16.8A7 7 0 0 1 12 7.2a7 7 0 0 1 0 9.6z" fill="#FF5F00" fill-opacity="0.8"/></svg>
+  </div>
+  <!-- Amex -->
+  <div class={`${iconClass} bg-white/5 rounded px-1 flex items-center justify-center border border-white/10`} title="American Express">
+    <svg viewBox="0 0 24 24" class="w-full h-full" fill="currentColor" opacity="0.8"><path d="M3.56 20h3.58l.6-3h5.68l.58 3h4.64l-4.54-9.98L18.42 2h-4.5l-2.68 6.56L8.46 2H2.1l6.9 10L3.56 20zm9.8-11.2l1.62 4.4h-3.3l1.68-4.4z"/></svg>
+  </div>
+  <!-- PayPal -->
+  <div class={`${iconClass} bg-white/5 rounded px-1 flex items-center justify-center border border-white/10`} title="PayPal">
+    <svg viewBox="0 0 24 24" class="w-full h-full" fill="currentColor" opacity="0.8"><path d="M7.076 19.382l-1.054 4.39H2.001L5.53 4.673A2.083 2.083 0 0 1 7.55 3.01h5.362c4.102 0 6.64 2.062 6.64 5.253 0 1.294-.282 2.508-.838 3.513l-.03.055-.033.05a7.35 7.35 0 0 1-2.924 2.664c-1.353.64-2.951.849-4.886.849h-2.1l-.81 3.99h3.743c1.55 0 2.21-1.077 2.458-2.316l.328-1.637h-3.46l-2.096 4.39z"/></svg>
+  </div>
+  <!-- Venmo -->
+  <div class={`${iconClass} bg-white/5 rounded px-1 flex items-center justify-center border border-white/10`} title="Venmo">
+    <svg viewBox="0 0 24 24" class="w-full h-full" fill="currentColor" opacity="0.8"><path d="M19.35 4.8c-2.35 0-3.9 1.55-4.45 4.3l-1.6 7.6-3.8-13.4H3.45l5.9 16.7h5.85l4.35-15.2h-.2z"/></svg>
+  </div>
+  <!-- Cash App -->
+  <div class={`${iconClass} bg-white/5 rounded px-1 flex items-center justify-center border border-white/10`} title="Cash App">
+    <svg viewBox="0 0 24 24" class="w-full h-full" fill="currentColor" opacity="0.8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.14 12.86c-.96.96-2.55 1.4-4.14 1.4v2.09h-2v-2.17c-1.65-.24-2.88-1.29-3.32-2.73l1.83-.75c.29.83.99 1.48 2.06 1.63v-3.79c-1.74-.48-3.66-1.53-3.66-3.56 0-1.6 1.26-2.89 3.09-3.15V5.55h2v2.16c1.3.17 2.39.92 2.89 2.19l-1.78.75c-.27-.67-.88-1.2-1.85-1.34v3.52c1.92.54 3.88 1.61 3.88 3.53.01 1.76-1.12 3.19-3.05 3.5z"/></svg>
+  </div>
+</div>

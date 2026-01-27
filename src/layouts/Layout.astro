@@ -1,0 +1,384 @@
+---
+import StickyCTA from '../components/StickyCTA.astro';
+import Navbar from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import { ScrollAnimationsInit } from '../components/ScrollAnimations';
+import CursorFollower, { CursorGlow } from '../components/CursorFollower';
+import ParticleBackground from '../components/ParticleBackground';
+import DataStream from '../components/DataStream';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = "Gus Digital Solutions | Websites, Online Stores, and SEO for Small Businesses",
+  description = "Get a professional website or Shopify store built by an expert with 15+ years of tech experience. I handle everything for small businesses – no tech skills required.",
+  image = "https://gusdigitalsolutions.com/assets/og-image.jpg"
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <meta name="keywords" content="website builder, shopify expert, ecommerce websites, small business websites, online store setup, web design services" />
+  <meta name="author" content="Gustavo Vasquez" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#3b82f6" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={image} />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@gusxads" />
+  <meta name="twitter:creator" content="@gusxads" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href={canonicalURL} />
+
+  <title>{title}</title>
+
+  <!-- Fonts - Optimized: preload critical weights -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- JSON-LD Person Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Gustavo Vasquez",
+    "url": "https://gusdigitalsolutions.com",
+    "image": "https://gusdigitalsolutions.com/assets/profile.jpg",
+    "jobTitle": "Website Builder & E-commerce Expert",
+    "description": "I build professional websites and online stores for businesses. Shopify, WordPress, custom sites.",
+    "email": "gus@gusdigitalsolutions.com",
+    "telephone": "+1-570-710-7790",
+    "sameAs": [
+      "https://www.linkedin.com/in/gustavo-vasquez-54637899/",
+      "https://x.com/gusxads"
+    ],
+    "knowsAbout": ["Website Design", "Shopify", "E-commerce", "WordPress", "Online Stores", "Small Business Websites"],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Independent Consultant"
+    }
+  }
+  </script>
+
+  <!-- JSON-LD FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "I'm not tech-savvy. Is that a problem?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not at all! That's exactly who I work with. You tell me what you want in plain English, and I handle all the technical stuff. No coding, no jargon, no headaches for you."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does a website cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on what you need - every project is different. Contact me with what you're looking for and I'll give you a custom quote with no hidden fees."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does it take to build a website?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most websites are ready in 3 days to a week. More advanced websites with custom features could take longer. I'll give you a timeline upfront and keep you updated along the way."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I update the website myself later?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! I set up everything so you can make changes yourself - adding products, updating prices, posting news. I'll show you how it works. And if you ever get stuck, just call me."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you speak Spanish?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí! I'm fluent in both English and Spanish. If you're more comfortable discussing your project in Spanish, no problem at all. I can also build bilingual websites for your business."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD ProfessionalService Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Gus Digital Solutions",
+    "url": "https://gusdigitalsolutions.com",
+    "logo": "https://gusdigitalsolutions.com/assets/og-image.jpg",
+    "image": "https://gusdigitalsolutions.com/assets/profile.jpg",
+    "description": "Professional website and e-commerce development services. Specializing in Shopify stores, WordPress sites, and custom web solutions for small businesses.",
+    "telephone": "+1-570-710-7790",
+    "email": "gus@gusdigitalsolutions.com",
+    "priceRange": "$$",
+    "areaServed": {
+      "@type": "Country",
+      "name": "United States"
+    },
+    "serviceType": ["Website Development", "Shopify Development", "E-commerce Solutions", "WordPress Development"],
+    "founder": {
+      "@type": "Person",
+      "name": "Gustavo Vasquez"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/in/gustavo-vasquez-54637899/",
+      "https://x.com/gusxads"
+    ]
+  }
+  </script>
+</head>
+<body class="min-h-screen bg-dark-900 text-dark-100">
+  <!-- Intro animations removed per user request -->
+
+
+  <!-- Global Background Effects (Interactive & Persistent) -->
+  <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+    <!-- Layer 0: New Tech Hero Video (Still handled in Hero for specific overlay needs, but particles/streams are here) -->
+    
+    <!-- Layer 1: Aurora background (Lowered opacity for video clarity) -->
+    <div class="absolute inset-0 aurora-bg opacity-30">
+      <div class="absolute -top-20 -left-20 w-[500px] h-[500px] bg-cyan-500/12 rounded-full blur-[80px] animate-float-slow"></div>
+      <div class="absolute top-1/3 -right-32 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] animate-float-medium" style="animation-delay: -3s;"></div>
+      <div class="absolute -bottom-40 left-1/4 w-[400px] h-[400px] bg-purple-500/12 rounded-full blur-[80px] animate-float-slow" style="animation-delay: -5s;"></div>
+    </div>
+
+    <!-- Layer 2: Interactive Particle Network -->
+    <div class="absolute inset-0 z-[1]">
+      <ParticleBackground client:idle />
+    </div>
+
+    <!-- Layer 3: Cyberpunk Data Streams -->
+    <div class="absolute inset-0 z-[2]">
+      <DataStream client:idle streamCount={8} speed="slow" />
+    </div>
+  </div>
+
+  <!-- Custom Cursor Effects (hidden on touch devices) -->
+  <CursorGlow client:idle />
+  <CursorFollower client:idle />
+
+  <!-- GSAP Scroll Animations Initializer -->
+  <ScrollAnimationsInit client:idle />
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <Navbar />
+  
+  <slot />
+
+  <Footer />
+
+  <!-- Global Navigation Arrows (Blue) -->
+  <div class="fixed bottom-24 right-4 md:bottom-28 md:right-8 z-[100] flex flex-col gap-3">
+    <!-- Back to Top -->
+    <button
+      id="back-to-top"
+      class="p-3 bg-primary-600 hover:bg-primary-500 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-300 opacity-0 invisible hover:-translate-y-1 active:scale-90 focus:outline-none"
+      aria-label="Back to top"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
+
+    <!-- Scroll to Bottom -->
+    <button
+      id="scroll-to-bottom"
+      class="p-3 bg-primary-600 hover:bg-primary-500 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-300 opacity-100 visible hover:translate-y-1 active:scale-90 focus:outline-none"
+      aria-label="Scroll to bottom"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Sticky CTA - appears after scrolling past hero -->
+  <StickyCTA />
+
+  <!-- Scroll Reveal Observer -->
+  <script>
+    // Intersection Observer for scroll reveal animations
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          // Optional: unobserve after reveal for performance
+          // revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    // Observe all elements with reveal classes
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // 3D Card Tilt Effect
+    document.querySelectorAll('.card-3d').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = (card as HTMLElement).getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+
+        (card as HTMLElement).style.setProperty('--rotateX', `${rotateX}deg`);
+        (card as HTMLElement).style.setProperty('--rotateY', `${rotateY}deg`);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        (card as HTMLElement).style.setProperty('--rotateX', '0deg');
+        (card as HTMLElement).style.setProperty('--rotateY', '0deg');
+      });
+    });
+
+    // Magnetic button effect (global)
+    document.querySelectorAll('.btn-magnetic').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = (btn as HTMLElement).getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        (btn as HTMLElement).style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        (btn as HTMLElement).style.transform = 'translate(0, 0)';
+      });
+    });
+
+    // Smooth parallax on scroll for gradient orbs
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          document.querySelectorAll('.float-slow, .float-medium').forEach((el, index) => {
+            const speed = index % 2 === 0 ? 0.05 : 0.03;
+            (el as HTMLElement).style.transform = `translateY(${scrollY * speed}px)`;
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    // Cursor glow effect for cards
+    document.querySelectorAll('.cursor-glow').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = (card as HTMLElement).getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        (card as HTMLElement).style.setProperty('--x', `${x}px`);
+        (card as HTMLElement).style.setProperty('--y', `${y}px`);
+      });
+    });
+
+    // Scroll progress bar fallback (for browsers without scroll-timeline)
+    const scrollProgress = document.querySelector('.scroll-progress') as HTMLElement;
+    if (scrollProgress && !CSS.supports('animation-timeline', 'scroll()')) {
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+        scrollProgress.style.transform = `scaleX(${progress})`;
+      }, { passive: true });
+    }
+
+    // Navigation Buttons Logic
+    const backToTop = document.getElementById('back-to-top');
+    const scrollToBottom = document.getElementById('scroll-to-bottom');
+
+    const updateNavButtons = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      
+      // Back to Top Visibility (Show after 500px)
+      if (backToTop) {
+        if (scrollY > 500) {
+          backToTop.classList.remove('opacity-0', 'invisible');
+          backToTop.classList.add('opacity-100', 'visible');
+        } else {
+          backToTop.classList.add('opacity-0', 'invisible');
+          backToTop.classList.remove('opacity-100', 'visible');
+        }
+      }
+
+      // Scroll to Bottom Visibility (Hide when near bottom)
+      if (scrollToBottom) {
+        if ((scrollY + windowHeight) >= documentHeight - 100) {
+           scrollToBottom.classList.add('opacity-0', 'invisible');
+           scrollToBottom.classList.remove('opacity-100', 'visible');
+        } else {
+           scrollToBottom.classList.remove('opacity-0', 'invisible');
+           scrollToBottom.classList.add('opacity-100', 'visible');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', updateNavButtons, { passive: true });
+    // Initial check
+    // setTimeout to ensure document height is stable
+    setTimeout(updateNavButtons, 100);
+
+    if (backToTop) {
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    if (scrollToBottom) {
+      scrollToBottom.addEventListener('click', () => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      });
+    }
+  </script>
+</body>
+</html>

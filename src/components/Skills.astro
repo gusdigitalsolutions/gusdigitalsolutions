@@ -1,0 +1,96 @@
+---
+import SkillsRadarChart from './SkillsRadarChart';
+import CredibilityBadges from './CredibilityBadges';
+import TechStackTags from './TechStackTags';
+import DataStream from './DataStream';
+
+const skills = [
+  { name: 'Shopify Stores', percent: 95 },
+  { name: 'WordPress Sites', percent: 90 },
+  { name: 'Automation', percent: 88 },
+  { name: 'Sales Funnels', percent: 92 },
+  { name: 'Web Design', percent: 88 },
+  { name: 'Google SEO', percent: 85 },
+];
+---
+
+<section id="skills" class="py-8 bg-dark-800/30 reveal relative overflow-hidden">
+  <!-- Cyberpunk data stream background -->
+  <div class="absolute inset-0 z-0 opacity-30">
+    <DataStream client:visible streamCount={12} speed="slow" />
+  </div>
+
+  <div class="container relative z-10 py-12">
+    <div class="grid lg:grid-cols-2 gap-6 lg:gap-12">
+      <!-- Left: Skills Visualization -->
+      <div class="card card-3d card-glow p-4 md:p-6">
+        <h3 class="text-lg font-semibold text-dark-100 mb-3 text-center lg:text-left">
+          My Expertise
+        </h3>
+
+        <!-- Radar Chart (Desktop) -->
+        <div class="hidden md:flex justify-center items-center min-h-[300px]">
+          <SkillsRadarChart client:visible size={300} />
+        </div>
+
+        <!-- Progress Bars (Mobile Fallback) -->
+        <div class="md:hidden space-y-3">
+          {skills.map(skill => (
+            <div class="skill-item">
+              <div class="flex justify-between mb-1">
+                <span class="text-dark-200 text-sm font-medium">{skill.name}</span>
+                <span class="text-primary-400 text-sm font-semibold">{skill.percent}%</span>
+              </div>
+              <div class="h-1.5 bg-dark-700 rounded-full overflow-hidden">
+                <div
+                  class="skill-bar h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full transition-all duration-1000 ease-out"
+                  style="width: 0%"
+                  data-progress={skill.percent}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Legend for radar (Desktop) -->
+        <div class="hidden md:grid grid-cols-2 gap-2 mt-4 text-xs">
+          {skills.map(skill => (
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500" />
+              <span class="text-dark-300">{skill.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Right: Tech Stack -->
+      <div class="card card-3d card-glow p-4 md:p-6">
+        <h3 class="text-lg font-semibold text-dark-100 mb-3">
+          Technology Stack
+        </h3>
+        <TechStackTags client:visible />
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Mobile skill bars animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const bars = entry.target.querySelectorAll('.skill-bar');
+        bars.forEach(bar => {
+          const progress = bar.getAttribute('data-progress');
+          if (progress) {
+            (bar as HTMLElement).style.width = `${progress}%`;
+          }
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const skillsSection = document.getElementById('skills');
+  if (skillsSection) observer.observe(skillsSection);
+</script>

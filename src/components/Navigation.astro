@@ -1,0 +1,225 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/#hero', label: 'Home' },
+  { href: '/#about', label: 'About Me' },
+  { href: '/#services', label: 'Services' },
+  { href: '/#experience', label: 'My Work' },
+  { href: '/#contact', label: 'Contact' },
+];
+
+const isHome = currentPath === '/' || currentPath === '' || currentPath === '/index.html';
+
+const getLinkHref = (href: string) => {
+  if (!isHome && href.startsWith('/#')) {
+    return href;
+  }
+  if (isHome && href.startsWith('/#')) {
+    return href.substring(1);
+  }
+  return href;
+};
+
+const isLinkActive = (href: string) => {
+  if (href === '/#hero') return isHome;
+  if (href.startsWith('/#')) return false;
+  return currentPath === href || currentPath === href + '/';
+};
+---
+
+<!-- FIXED HEADER NAVIGATION -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-[9999] transition-all duration-300">
+  <div class="w-full max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-3">
+    <div id="nav-container" class="flex items-center justify-between h-14 sm:h-16 px-4 md:px-8 rounded-2xl bg-dark-900/95 backdrop-blur-xl border border-white/10 shadow-2xl">
+      
+      <!-- Brand -->
+      <a href="/" class="group flex items-center gap-1 focus:outline-none shrink-0">
+        <span class="text-[11px] xs:text-[13px] sm:text-base lg:text-xl uppercase tracking-tighter whitespace-nowrap flex items-center gap-1">
+          <span class="font-normal text-white/80">Gus</span>
+          <span class="font-bold text-white">Digital</span>
+          <span class="font-black text-primary-500">Solutions</span>
+        </span>
+      </a>
+
+      <!-- Desktop Links -->
+      <ul class="hidden lg:flex items-center gap-1 xl:gap-6">
+        {navLinks.map(link => (
+          <li>
+            <a
+              href={getLinkHref(link.href)}
+              class:list={[
+                "px-3 xl:px-4 py-2 text-[10px] xl:text-xs font-bold uppercase tracking-wider transition-all rounded-lg whitespace-nowrap",
+                "text-dark-300 hover:text-white",
+                isLinkActive(link.href) ? "text-white" : ""
+              ]}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <!-- Desktop Action Buttons -->
+      <div class="hidden lg:flex items-center gap-2">
+        <a
+          href="/free-resources"
+          class="px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-all"
+        >
+          Join
+        </a>
+        <a
+          href="https://calendly.com/gus-gusdigitalsolutions/30min"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-5 py-2.5 bg-white/10 hover:bg-white hover:text-dark-950 text-white border border-white/10 rounded-full transition-all text-[10px] font-black uppercase tracking-widest"
+        >
+          Book Me
+        </a>
+      </div>
+
+      <!-- Mobile Action Group -->
+      <div class="flex lg:hidden items-center gap-1.5">
+        <a 
+          href="/free-resources" 
+          class="bg-primary-600 text-white px-2.5 py-1.5 rounded-full text-[7px] font-black uppercase tracking-wide whitespace-nowrap"
+        >
+          Join
+        </a>
+        <a 
+          href="https://calendly.com/gus-gusdigitalsolutions/30min" 
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-white/10 text-white px-2 py-1.5 rounded-full text-[6px] font-black uppercase tracking-wide border border-white/10 whitespace-nowrap"
+        >
+          Book Me
+        </a>
+
+        <!-- Hamburger Button -->
+        <button
+          id="nav-toggle"
+          class="p-2 rounded-lg bg-white/10 border border-white/10 text-white flex items-center justify-center w-9 h-9 ml-1"
+          aria-label="Open menu"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8h16M4 16h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU OVERLAY -->
+<div
+  id="mobile-menu"
+  class="mobile-menu fixed inset-0 bg-dark-950/98 backdrop-blur-xl z-[9998] lg:hidden flex flex-col"
+>
+  <!-- Close Button -->
+  <button
+    id="nav-close"
+    class="absolute top-5 right-5 p-3 rounded-xl bg-white/10 border border-white/10 text-white z-50"
+    aria-label="Close menu"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+
+  <!-- Menu Content -->
+  <div class="flex-grow overflow-y-auto px-6 pt-24 pb-10 flex flex-col">
+    <ul class="space-y-3">
+      {navLinks.map((link) => (
+        <li>
+          <a 
+            href={getLinkHref(link.href)} 
+            class:list={[
+              "mobile-link flex items-center justify-between py-4 px-6 rounded-2xl border transition-all",
+              isLinkActive(link.href) 
+                ? "bg-primary-600/20 border-primary-500/40 text-white" 
+                : "bg-white/5 border-white/10 text-dark-300 hover:text-white hover:bg-white/10"
+            ]}
+          >
+            <span class="text-sm uppercase tracking-widest font-bold">{link.label}</span>
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+        </li>
+      ))}
+    </ul>
+    
+    <!-- Mobile Menu CTAs -->
+    <div class="mt-8 space-y-3">
+      <a 
+        href="/free-resources" 
+        class="mobile-link block w-full py-4 px-6 bg-primary-600 text-white text-center rounded-2xl text-sm uppercase tracking-widest font-bold"
+      >
+        Join Free Resources
+      </a>
+      <a 
+        href="https://calendly.com/gus-gusdigitalsolutions/30min" 
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mobile-link block w-full py-4 px-6 bg-white/10 border border-white/10 text-white text-center rounded-2xl text-sm uppercase tracking-widest font-bold"
+      >
+        Book a Meeting
+      </a>
+    </div>
+    
+    <!-- Clickable Empty Space to Close Menu -->
+    <div id="menu-backdrop" class="flex-grow mt-6 cursor-pointer min-h-[100px]"></div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const toggle = document.getElementById('nav-toggle');
+    const closeBtn = document.getElementById('nav-close');
+    const menu = document.getElementById('mobile-menu');
+
+    if (!toggle || !menu) return;
+
+    function openMenu() {
+      menu.classList.add('menu-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      menu.classList.remove('menu-open');
+      document.body.style.overflow = '';
+    }
+
+    function toggleMenu() {
+      if (menu.classList.contains('menu-open')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+
+    toggle.addEventListener('click', toggleMenu);
+    closeBtn?.addEventListener('click', closeMenu);
+
+    // Close on link click
+    menu.querySelectorAll('.mobile-link').forEach(function(link) {
+      link.addEventListener('click', closeMenu);
+    });
+
+    // Close when clicking empty space below buttons
+    const backdrop = document.getElementById('menu-backdrop');
+    backdrop?.addEventListener('click', closeMenu);
+  })();
+</script>
+
+<style>
+  .mobile-menu {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .mobile-menu.menu-open {
+    opacity: 1;
+    visibility: visible;
+  }
+</style>

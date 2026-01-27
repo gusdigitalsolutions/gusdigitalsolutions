@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ServicesSection from '../components/Services.astro';
+import WorkPortfolio from '../components/WorkPortfolio.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<Layout title="Services & Expertise | Gus Digital Solutions">
+  <main class="pt-20">
+    <div class="py-24 text-center relative overflow-hidden">
+      <!-- Decorative Orbs -->
+      <div class="absolute top-1/2 left-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      
+      <div class="container relative z-10">
+        <p class="text-subtitle mb-4 reveal">Premium Solutions & Tech</p>
+        <h1 class="text-title text-4xl md:text-8xl text-white mb-6 reveal" style="transition-delay: 100ms">
+          Expertise & <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-cyan-400">Services</span>
+        </h1>
+        <p class="text-dark-300 text-lg md:text-xl max-w-2xl mx-auto px-4 opacity-70 reveal" style="transition-delay: 200ms">
+          Professional solutions to help your business scale from startup to enterprise.
+        </p>
+      </div>
+    </div>
+
+    <ServicesSection />
+    <section class="container py-20">
+      <WorkPortfolio withCardBackground={true} />
+    </section>
+    
+    <!-- CTA for Custom Work -->
+    <section class="py-20 text-center">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-white mb-6">Need something custom?</h2>
+        <p class="text-dark-300 mb-8 max-w-xl mx-auto">
+          I specialize in solving unique technical challenges. Let's discuss your specific needs.
+        </p>
+        <a href="#contact" class="btn btn-primary btn-lg">Book a Free Consultation</a>
+      </div>
+    </section>
+
+    <Contact />
+  </main>
+</Layout>

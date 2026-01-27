@@ -1,0 +1,46 @@
+---
+import { ProjectCard } from './ProjectCard';
+
+const projects = [
+  {
+    title: 'Iron House Gym',
+    description: 'Premier health and fitness gym website. Modern design showcasing amenities, trainers, and membership options.',
+    image: '/assets/projects/Screenshot%202026-01-26%20191526.jpg',
+    tags: ['Web Design', 'SEO', 'Advertising'],
+    category: 'Advertising'
+  },
+  {
+    title: 'Gazebosrus',
+    description: 'Outdoor structures and gazebos e-commerce platform. Custom Shopify catalog implementation.',
+    image: '/assets/projects/Screenshot%202026-01-26%20191552.jpg',
+    tags: ['Shopify', 'E-commerce', 'Catalog'],
+    category: 'Shopify Store'
+  },
+  {
+    title: 'Saunarus.com',
+    description: 'Premium indoor and outdoor saunas e-commerce platform. Clean, modern design focused on high-ticket sales.',
+    image: '/assets/projects/Screenshot%202026-01-26%20191604.jpg',
+    tags: ['Shopify', 'E-commerce', 'CRO'],
+    category: 'Shopify Store'
+  }
+];
+---
+
+<section id="projects" class="py-8 md:py-16 bg-dark-900/50">
+  <div class="container">
+    <h2 class="section-title neon-title text-center mb-8 text-3xl md:text-5xl font-bold">Featured Websites</h2>
+    
+    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
+      {projects.map((project) => (
+        <ProjectCard
+          client:visible
+          title={project.title}
+          description={project.description}
+          image={project.image}
+          tags={project.tags}
+          category={project.category}
+        />
+      ))}
+    </div>
+  </div>
+</section>

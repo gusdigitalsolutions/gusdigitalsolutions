@@ -1,0 +1,133 @@
+---
+import VideoBackground from './VideoBackground';
+import DataStream from './DataStream';
+import SectionHeader from './SectionHeader.astro';
+
+const projects = [
+  {
+    title: 'Iron House Gym',
+    company: 'Web Design & Branding',
+    image: '/assets/projects/Screenshot 2026-01-26 191526.jpg', 
+    description: 'Premier health and fitness gym website. Modern design showcasing amenities, trainers, and membership options for a local fitness community.',
+    tags: ['Web Design', 'Local Business', 'Branding'],
+  },
+  {
+    title: 'Saunarus',
+    company: 'E-commerce Store',
+    image: '/assets/projects/Screenshot 2026-01-26 191552.jpg', 
+    description: 'Premium indoor & outdoor saunas online store. Features a clean, high-converting catalog design with seamless checkout integration.',
+    tags: ['E-commerce', 'Shopify', 'Conversion'],
+  },
+  {
+    title: 'Gazebos R Us',
+    company: 'Online Retailer',
+    image: '/assets/projects/Screenshot 2026-01-26 191604.jpg', 
+    description: 'Direct-to-consumer outdoor structures retailer. Extensive product catalog with filtering and high-quality imagery for outdoor living spaces.',
+    tags: ['E-commerce', 'Catalog', 'SEO'],
+  },
+];
+
+const workHistory = [
+  {
+    title: 'Account Executive',
+    company: 'X (Twitter)',
+    date: '2025',
+    description: 'I work with companies like X (Twitter) to help them get more customers and launch successful ad plans.',
+    tags: ['More Sales', 'Ad Plans', 'Happy Customers'],
+  },
+  {
+    title: 'Growth Lead',
+    company: 'Crypto Startup',
+    date: '2020 - 2022',
+    description: 'Helped a new tech company grow their money from $100K to $2.5M. I led the plan for finding new money and built a group of excited fans.',
+    tags: ['Making Money', 'Plan', 'Fans'],
+  },
+  {
+    title: 'Senior Sales Representative',
+    company: 'SaaS Enterprise',
+    date: '2015 - 2020',
+    description: "I was the best salesperson at my company, year after year. I made over $350K in sales for them by focusing on solving real problems for people.",
+    tags: ['Best Seller', 'Problem Solver', 'Sales'],
+  },
+  {
+    title: 'BS Information Sciences & Technology',
+    company: 'Penn State University',
+    date: 'Graduated',
+    description: 'I went to school for technology and smart systems. This helps me build better solutions for you today.',
+    tags: ['Tech School', 'College'],
+  },
+];
+---
+
+<section id="experience" class="py-16 relative reveal overflow-hidden">
+  <!-- Ambient Lighting -->
+  <div class="absolute inset-0 pointer-events-none opacity-20">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-primary-600/5 rounded-full blur-[160px]"></div>
+    <div class="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] bg-[length:60px_60px] opacity-[0.05]"></div>
+  </div>
+
+  <div class="container relative z-10">
+    <SectionHeader
+      subtitle="Professional History"
+      title="Experience"
+    />
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative max-w-7xl mx-auto">
+      {workHistory.map((exp, index) => (
+        <div class="reveal opacity-0 translate-y-12 transition-all duration-1000" style={`transition-delay: ${index * 200}ms`}>
+          <div class="group relative h-full p-8 md:p-10 rounded-[3rem] bg-dark-900/20 border border-white/[0.03] backdrop-blur-2xl hover:bg-dark-900/40 hover:border-primary-500/30 transition-all duration-700 overflow-hidden shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)]">
+            
+            <!-- Decorative Background Glow -->
+            <div class="absolute -top-20 -right-20 w-64 h-64 bg-primary-600/5 rounded-full blur-[80px] group-hover:bg-primary-500/10 transition-colors duration-700"></div>
+
+            <div class="flex flex-col h-full relative z-10">
+              <!-- Top Row: Date & Ref -->
+              <div class="flex items-center justify-end mb-6 min-h-[20px]">
+                {exp.date && (
+                  <div class="px-5 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                    <span class="text-[10px] font-black text-white uppercase tracking-widest leading-none">
+                      {exp.date}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <!-- Main Content -->
+              <div class="mb-6">
+                <h3 class="text-3xl md:text-4xl font-black text-white group-hover:text-primary-400 transition-colors leading-[1.1] tracking-tighter uppercase">
+                  {exp.title}
+                </h3>
+                <div class="mt-4 flex items-center gap-3">
+                  <div class="h-px w-8 bg-primary-500/50"></div>
+                  <p class="text-primary-400 font-bold uppercase tracking-[0.2em] text-[11px]">{exp.company}</p>
+                </div>
+              </div>
+              
+              <p class="text-dark-300 mb-8 leading-relaxed text-base md:text-lg opacity-70 group-hover:opacity-100 transition-all duration-500">
+                {exp.description}
+              </p>
+              
+              <!-- Skills/Tags Footer -->
+              <div class="mt-auto">
+                <p class="text-[9px] font-black text-dark-500 uppercase tracking-[0.3em] mb-4">Core Capabilities</p>
+                <div class="flex flex-wrap gap-3">
+                  {exp.tags.map(tag => (
+                    <span class="px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-xl bg-white/5 text-dark-300 border border-white/5 group-hover:border-primary-500/30 group-hover:text-white transition-all duration-300 hover:bg-primary-500/10">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <!-- Animated Edge Light -->
+            <div class="absolute inset-0 rounded-[3.5rem] bg-gradient-to-br from-primary-600/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+            
+            <!-- Shimmer Effect -->
+            <div class="absolute inset-0 -translate-x-full group-hover:animate-shimmer bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

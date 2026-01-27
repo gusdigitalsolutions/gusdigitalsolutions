@@ -1,0 +1,196 @@
+---
+import { StaggerContainer, StaggerItem } from './AnimatedCard';
+import { ServiceFlipCard } from './FlipCard';
+import VideoBackground from './VideoBackground';
+import DataStream from './DataStream';
+import GlitchText from './GlitchText';
+import SectionHeader from './SectionHeader.astro';
+
+const services = [
+  {
+    title: 'Websites that Scale',
+    description: 'Custom-built websites focused on high performance and conversion. We turn visitors into customers with a seamless, premium experience.',
+    icon: 'monitor',
+    gradient: 'from-blue-500/20 to-cyan-500/20',
+    pricing: 'From $299',
+    timeline: '3-7 Days (Varies by scope)',
+    features: ['High-Performance', 'Mobile Optimized', 'SEO Ready', 'Conversion Focused'],
+  },
+  {
+    title: 'E-Commerce Solutions',
+    description: 'Launch or scale your online storefront with high-converting checkouts and seamless product management.',
+    icon: 'cart',
+    gradient: 'from-purple-500/20 to-pink-500/20',
+    pricing: 'From $499',
+    timeline: '5-10 Days (Varies by scope)',
+    features: ['Shopify Experts', 'Payment Integration', 'Secure Checkout', 'Inventory Systems'],
+  },
+  {
+    title: 'Business Automation',
+    description: 'Eliminate manual work and scale your operations with custom AI workflows and automated business systems.',
+    icon: 'cpu',
+    gradient: 'from-pink-500/20 to-rose-500/20',
+    pricing: 'Custom Quote',
+    timeline: '3-7 Days for Setup',
+    features: ['AI Workflows', 'Lead Automation', 'Data Systems', 'Custom Apps'],
+  },
+  {
+    title: 'Customer Acquisition',
+    description: 'Strategic growth systems designed to capture leads and convert them into loyal, high-paying customers.',
+    icon: 'funnel',
+    gradient: 'from-amber-500/20 to-orange-500/20',
+    pricing: 'Custom Quote',
+    timeline: '3-7 Days for Launch',
+    features: ['Lead Generation', 'Sales Funnels', 'Growth Strategy', 'Analytics'],
+  },
+  {
+    title: 'Systems Intergration',
+    description: 'Sync your entire tech stack to ensure seamless data flow and eliminate the need for manual data entry.',
+    icon: 'plug',
+    gradient: 'from-cyan-500/20 to-blue-500/20',
+    pricing: 'Custom Quote',
+    timeline: '3-7 Days (Varies by scope)',
+    features: ['API Connections', 'CRM Syncing', 'Clean Data', 'Flow Automation'],
+  },
+  {
+    title: 'Google Ranking (SEO)',
+    description: 'Dominate local search results and build long-term authority. We optimize your presence so the right customers find you exactly when they\'re looking for your services.',
+    icon: 'trending',
+    gradient: 'from-emerald-500/20 to-green-500/20',
+    pricing: 'From $499',
+    timeline: '3 Days for Setup (Results in 2-4 weeks)',
+    features: ['Google Maps Setup', 'Local Keywords', 'Speed Optimization', 'Rank Tracking'],
+  },
+  {
+    title: 'AI Content Tools',
+    description: 'Build a high-impact presence with AI-powered video, professional images, and strategic social content systems.',
+    icon: 'lightning',
+    gradient: 'from-indigo-500/20 to-violet-500/20',
+    pricing: 'Custom Quote',
+    timeline: '3-7 Days (Varies by quantity)',
+    features: ['Video & Image Gen', 'Content Strategy', 'Social Automation', 'Brand Voice'],
+  },
+  {
+    title: 'Premium Web Setup',
+    description: 'Secure, high-performance web foundations for businesses that need absolute control and custom scalability.',
+    icon: 'layers',
+    gradient: 'from-emerald-500/20 to-teal-500/20',
+    pricing: 'From $349',
+    timeline: '3-7 Days (Varies by scope)',
+    features: ['Secure Architecture', 'CMS Readiness', 'Modern UI/UX', 'Global Performance'],
+  },
+];
+
+---
+
+<section id="services" class="py-8 relative overflow-hidden reveal">
+  <!-- Video Background -->
+  <div class="absolute inset-0 -z-20">
+    <VideoBackground
+      client:visible
+      videoName="services-bg"
+      overlayOpacity={0.7}
+      blendMode="normal"
+    />
+  </div>
+
+  <!-- Gradient orbs overlay -->
+  <div class="absolute inset-0 -z-10 pointer-events-none">
+    <div class="absolute top-1/4 left-0 w-[500px] h-[500px] bg-primary-500/5 rounded-full blur-[120px]"></div>
+    <div class="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-[100px]"></div>
+  </div>
+
+  <div class="container relative z-10 pb-24 md:pb-40">
+    <SectionHeader
+      title="Build & Scale"
+      titleAccent="Your Revenue"
+      description="Websites and automation designed to grow with your business and help you succeed."
+    />
+
+    <!-- DISCOVERY HUB: PREMIUM INTERACTIVE GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12 pt-12 relative">
+      {services.map((service, index) => (
+        <div 
+          class="reveal relative group/service-card" 
+          style={`transition-delay: ${index * 100}ms; height: 500px;`}
+        >
+          <div itemscope itemtype="https://schema.org/Service" class="h-full w-full">
+            <meta itemprop="serviceType" content={service.title} />
+            <meta itemprop="provider" content="Gus Digital Solutions" />
+            <ServiceFlipCard
+              client:visible
+              title={service.title}
+              description={service.description}
+              icon={service.icon}
+              gradient={service.gradient}
+              pricing={service.pricing}
+              timeline={service.timeline}
+              features={service.features}
+              showPrices={false}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Premium CTA Section -->
+    <div class="mt-24 text-center reveal" style="transition-delay: 500ms">
+      <p class="text-dark-300 mb-10 max-w-xl mx-auto text-lg leading-relaxed opacity-90">Not sure what you need? <span class="text-white font-semibold">Let's figure it out together.</span></p>
+      
+      <!-- Premium Button with Gradient Border -->
+      <div class="inline-block relative group/cta mb-16">
+        <!-- Animated Gradient Border -->
+        <div class="absolute -inset-[2px] bg-gradient-to-r from-primary-400 via-cyan-400 to-blue-500 rounded-[2rem] opacity-75 group-hover/cta:opacity-100 blur-sm group-hover/cta:blur-md transition-all duration-500"></div>
+        
+        <!-- Button Container -->
+        <a href="#contact" class="relative flex items-center gap-4 px-10 py-5 md:px-14 md:py-6 bg-gradient-to-br from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white rounded-[2rem] font-black text-base md:text-lg uppercase tracking-tight transition-all duration-500 shadow-2xl shadow-primary-900/50 hover:shadow-primary-500/60 active:scale-95 overflow-hidden">
+          
+          <!-- Glossy Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-tr from-white/20 via-transparent to-transparent opacity-40"></div>
+          
+          <!-- Animated Shimmer -->
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/cta:animate-shimmer"></div>
+          
+          <!-- Content -->
+          <span class="relative z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">Get a Free Consultation</span>
+          
+          <!-- Arrow Icon -->
+          <svg class="relative z-10 w-6 h-6 transition-transform group-hover/cta:translate-x-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Expectations & Liability Disclaimer -->
+      <div class="max-w-3xl mx-auto px-6 py-8 rounded-3xl bg-dark-900/40 border border-white/5 backdrop-blur-sm">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 text-left">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary-500/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-black text-primary-500 uppercase tracking-widest">Timelines</p>
+              <p class="text-xs text-dark-300">Standard delivery is 3-7 business days. Complex projects may require more time.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04M12 21.056c1.514 0 3.12-.416 4.382-1.211A11.955 11.955 0 0012 2.944a11.955 11.955 0 00-4.382 16.901 11.955 11.955 0 014.382 1.211a11.955 11.955 0 014.382-1.211z"/></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-black text-green-500 uppercase tracking-widest">Liability</p>
+              <p class="text-xs text-dark-300">Results depend on market factors. We guarantee quality delivery, not specific revenue outcomes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Flip card container needs explicit height */
+  :global(.flip-card-container) {
+    min-height: 280px;
+  }
+</style>
