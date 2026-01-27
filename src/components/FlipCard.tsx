@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, type ReactNode, type MouseEvent, type TouchEvent } from 'react';
-import { motion, useSpring, useTransform, type MotionValue } from 'motion/react';
+import { motion, useSpring, useTransform, type MotionValue } from 'framer-motion';
 
 interface FlipCardProps {
   front: ReactNode;
