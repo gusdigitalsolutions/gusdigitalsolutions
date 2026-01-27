@@ -181,23 +181,23 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="absolute -bottom-40 left-1/4 w-[400px] h-[400px] bg-purple-500/12 rounded-full blur-[80px] animate-float-slow" style="animation-delay: -5s;"></div>
     </div>
 
-    <!-- Layer 2: Interactive Particle Network -->
+    <!-- Layer 2: Interactive Particle Network (client:visible for performance) -->
     <div class="absolute inset-0 z-[1]">
-      <ParticleBackground client:idle />
+      <ParticleBackground client:visible />
     </div>
 
-    <!-- Layer 3: Cyberpunk Data Streams -->
+    <!-- Layer 3: Cyberpunk Data Streams (reduced count, client:visible) -->
     <div class="absolute inset-0 z-[2]">
-      <DataStream client:idle streamCount={8} speed="slow" />
+      <DataStream client:visible streamCount={5} speed="slow" />
     </div>
   </div>
 
-  <!-- Custom Cursor Effects (hidden on touch devices) -->
-  <CursorGlow client:idle />
-  <CursorFollower client:idle />
+  <!-- Custom Cursor Effects (hidden on touch devices, loads on visibility) -->
+  <CursorGlow client:visible />
+  <CursorFollower client:visible />
 
   <!-- GSAP Scroll Animations Initializer -->
-  <ScrollAnimationsInit client:idle />
+  <ScrollAnimationsInit client:load />
 
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" aria-hidden="true"></div>

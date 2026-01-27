@@ -5,10 +5,10 @@ import type { ISourceOptions } from '@tsparticles/engine';
 
 const particlesConfig: ISourceOptions = {
   fullScreen: false,
-  fpsLimit: 60,
+  fpsLimit: 30,
   particles: {
     number: {
-      value: 80,
+      value: 30,
       density: {
         enable: true,
         width: 800,

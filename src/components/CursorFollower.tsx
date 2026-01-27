@@ -169,12 +169,14 @@ export default function CursorFollower({ className = '' }: CursorFollowerProps) 
         </motion.div>
       )}
 
-      {/* Hide default cursor */}
-      <style>{`
-        * {
-          cursor: none !important;
-        }
-      `}</style>
+      {/* Hide default cursor only when custom cursor is visible */}
+      {isVisible && (
+        <style>{`
+          * {
+            cursor: none !important;
+          }
+        `}</style>
+      )}
     </>
   );
 }
