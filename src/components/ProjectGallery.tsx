@@ -1,5 +1,9 @@
-import { useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'motion/react';
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface Project {
   title: string;
@@ -15,21 +19,32 @@ interface ProjectGalleryProps {
 
 export function ProjectGallery({ projects }: ProjectGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Create a horizontal scroll effect based on page scroll
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
+  const galleryRef = useRef<HTMLDivElement>(null);
 
-  // Animate from right to left
-  const xTranslate = useTransform(scrollYProgress, [0, 1], ["50%", "-50%"]);
-  const springX = useSpring(xTranslate, { stiffness: 50, damping: 20 });
+  useGSAP(() => {
+    if (!containerRef.current || !galleryRef.current) return;
+
+    // Create horizontal scroll effect with scrub for spring-like smoothness
+    gsap.fromTo(
+      galleryRef.current,
+      { xPercent: 50 },
+      {
+        xPercent: -50,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.5, // Smooth scrubbing simulates spring physics
+        },
+      }
+    );
+  }, { scope: containerRef });
 
   return (
     <div ref={containerRef} className="py-10 overflow-hidden cursor-grab active:cursor-grabbing">
-      <motion.div 
-        style={{ x: springX }}
+      <div
+        ref={galleryRef}
         className="flex gap-8 px-10"
       >
         {projects.concat(projects).map((project, index) => (
@@ -74,7 +89,7 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }

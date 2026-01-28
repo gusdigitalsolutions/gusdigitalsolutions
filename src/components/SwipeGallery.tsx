@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useRef, useEffect } from 'react';
+import gsap from 'gsap';
 
 interface SwipeGalleryProps {
   images: string[];
@@ -8,11 +8,27 @@ interface SwipeGalleryProps {
 export default function SwipeGallery({ images }: SwipeGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Staggered entrance animation
+  useEffect(() => {
+    const items = itemsRef.current.filter(Boolean);
+    if (items.length === 0) return;
+
+    gsap.set(items, { opacity: 0, scale: 0.9 });
+    gsap.to(items, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.4,
+      stagger: 0.05,
+      ease: 'power2.out',
+    });
+  }, [images]);
 
   const scrollToIndex = (index: number) => {
     const clampedIndex = Math.max(0, Math.min(index, images.length - 1));
     setCurrentIndex(clampedIndex);
-    
+
     if (containerRef.current) {
       const scrollAmount = clampedIndex * 320; // card width + gap
       containerRef.current.scrollTo({ left: scrollAmount, behavior: 'smooth' });
@@ -54,11 +70,9 @@ export default function SwipeGallery({ images }: SwipeGalleryProps) {
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {images.map((img, i) => (
-          <motion.div
+          <div
             key={img}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.05 }}
+            ref={(el) => { itemsRef.current[i] = el; }}
             className="flex-shrink-0 snap-center"
           >
             <img
@@ -67,7 +81,7 @@ export default function SwipeGallery({ images }: SwipeGalleryProps) {
               className="w-72 h-48 md:w-80 md:h-56 lg:w-96 lg:h-64 object-cover rounded-2xl shadow-2xl border border-dark-700/50 hover:border-primary-500/50 hover:scale-[1.02] transition-all cursor-pointer"
               loading="lazy"
             />
-          </motion.div>
+          </div>
         ))}
       </div>
 

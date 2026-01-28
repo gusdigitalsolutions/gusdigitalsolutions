@@ -1,5 +1,9 @@
-import { useRef, useMemo } from 'react';
-import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
+import { useRef, useMemo, type ReactNode } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface TextRevealProps {
   children: string;
@@ -17,62 +21,47 @@ export default function TextReveal({
   once = true,
 }: TextRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const wordsRef = useRef<(HTMLSpanElement | null)[]>([]);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start 0.9', 'start 0.4'],
-  });
-
-  // Split text into words
   const words = useMemo(() => children.split(' '), [children]);
+
+  useGSAP(() => {
+    if (!containerRef.current) return;
+
+    const wordElements = wordsRef.current.filter(Boolean);
+    if (wordElements.length === 0) return;
+
+    gsap.set(wordElements, { opacity: 0.1, y: 20 });
+
+    gsap.to(wordElements, {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      stagger: staggerDelay,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top 90%',
+        end: 'top 40%',
+        toggleActions: once ? 'play none none none' : 'play reverse play reverse',
+      },
+    });
+  }, { scope: containerRef, dependencies: [staggerDelay, once] });
 
   return (
     <div ref={containerRef} className={`overflow-hidden ${className}`}>
       <Component className="flex flex-wrap">
         {words.map((word, i) => (
-          <Word
+          <span
             key={i}
-            progress={scrollYProgress}
-            index={i}
-            total={words.length}
-            staggerDelay={staggerDelay}
+            ref={(el) => { wordsRef.current[i] = el; }}
+            className="inline-block mr-[0.25em] last:mr-0"
           >
             {word}
-          </Word>
+          </span>
         ))}
       </Component>
     </div>
-  );
-}
-
-// Individual word with reveal animation
-interface WordProps {
-  children: string;
-  progress: MotionValue<number>;
-  index: number;
-  total: number;
-  staggerDelay: number;
-}
-
-function Word({ children, progress, index, total, staggerDelay }: WordProps) {
-  // Calculate the range for this word based on its position
-  const start = index / total;
-  const end = start + 1 / total;
-
-  // Transform scroll progress to opacity and Y position
-  const opacity = useTransform(progress, [start, end], [0.1, 1]);
-  const y = useTransform(progress, [start, end], [20, 0]);
-
-  return (
-    <motion.span
-      style={{
-        opacity,
-        y,
-      }}
-      className="inline-block mr-[0.25em] last:mr-0"
-    >
-      {children}
-    </motion.span>
   );
 }
 
@@ -91,60 +80,48 @@ export function CharacterReveal({
   staggerDelay = 0.02,
 }: CharacterRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const charsRef = useRef<(HTMLSpanElement | null)[]>([]);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start 0.9', 'start 0.5'],
-  });
-
-  // Split into characters
   const characters = useMemo(() => children.split(''), [children]);
+
+  useGSAP(() => {
+    if (!containerRef.current) return;
+
+    const charElements = charsRef.current.filter(Boolean);
+    if (charElements.length === 0) return;
+
+    gsap.set(charElements, { opacity: 0, y: 30, rotateX: 45 });
+
+    gsap.to(charElements, {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      duration: 0.4,
+      stagger: staggerDelay,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top 90%',
+        end: 'top 50%',
+        toggleActions: 'play none none none',
+      },
+    });
+  }, { scope: containerRef, dependencies: [staggerDelay] });
 
   return (
     <div ref={containerRef} className={`overflow-hidden ${className}`}>
       <Component className="flex flex-wrap">
         {characters.map((char, i) => (
-          <Character
+          <span
             key={i}
-            progress={scrollYProgress}
-            index={i}
-            total={characters.length}
+            ref={(el) => { charsRef.current[i] = el; }}
+            style={{ display: 'inline-block', transformOrigin: 'bottom' }}
           >
             {char === ' ' ? '\u00A0' : char}
-          </Character>
+          </span>
         ))}
       </Component>
     </div>
-  );
-}
-
-interface CharacterProps {
-  children: string;
-  progress: MotionValue<number>;
-  index: number;
-  total: number;
-}
-
-function Character({ children, progress, index, total }: CharacterProps) {
-  const start = index / total;
-  const end = start + 0.5 / total;
-
-  const opacity = useTransform(progress, [start, end], [0, 1]);
-  const y = useTransform(progress, [start, end], [30, 0]);
-  const rotateX = useTransform(progress, [start, end], [45, 0]);
-
-  return (
-    <motion.span
-      style={{
-        opacity,
-        y,
-        rotateX,
-        transformOrigin: 'bottom',
-        display: 'inline-block',
-      }}
-    >
-      {children}
-    </motion.span>
   );
 }
 
@@ -157,73 +134,54 @@ interface LineRevealProps {
 
 export function LineReveal({ children, className = '', lineClassName = '' }: LineRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const linesRef = useRef<(HTMLParagraphElement | null)[]>([]);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start 0.9', 'start 0.4'],
-  });
-
-  // Split by newlines or sentences
   const lines = useMemo(() => {
     return children.split(/(?<=\.|\?|!)\s+/).filter((line) => line.trim());
   }, [children]);
 
+  useGSAP(() => {
+    if (!containerRef.current) return;
+
+    const lineElements = linesRef.current.filter(Boolean);
+    if (lineElements.length === 0) return;
+
+    gsap.set(lineElements, { opacity: 0.2, x: -30, clipPath: 'inset(0 100% 0 0)' });
+
+    gsap.to(lineElements, {
+      opacity: 1,
+      x: 0,
+      clipPath: 'inset(0 0% 0 0)',
+      duration: 0.6,
+      stagger: 0.15,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top 90%',
+        end: 'top 40%',
+        toggleActions: 'play none none none',
+      },
+    });
+  }, { scope: containerRef });
+
   return (
     <div ref={containerRef} className={className}>
-      {lines.map((line, i) => {
-        const start = i / lines.length;
-        const end = start + 1 / lines.length;
-
-        return (
-          <LineItem
-            key={i}
-            progress={scrollYProgress}
-            start={start}
-            end={end}
-            className={lineClassName}
-          >
-            {line}
-          </LineItem>
-        );
-      })}
+      {lines.map((line, i) => (
+        <p
+          key={i}
+          ref={(el) => { linesRef.current[i] = el; }}
+          className={`mb-2 last:mb-0 ${lineClassName}`}
+        >
+          {line}
+        </p>
+      ))}
     </div>
-  );
-}
-
-interface LineItemProps {
-  children: string;
-  progress: MotionValue<number>;
-  start: number;
-  end: number;
-  className?: string;
-}
-
-function LineItem({ children, progress, start, end, className }: LineItemProps) {
-  const opacity = useTransform(progress, [start, end], [0.2, 1]);
-  const x = useTransform(progress, [start, end], [-30, 0]);
-  const clipPath = useTransform(
-    progress,
-    [start, end],
-    ['inset(0 100% 0 0)', 'inset(0 0% 0 0)']
-  );
-
-  return (
-    <motion.p
-      style={{
-        opacity,
-        x,
-        clipPath,
-      }}
-      className={`mb-2 last:mb-0 ${className}`}
-    >
-      {children}
-    </motion.p>
   );
 }
 
 // Simple fade-up reveal for any content
 interface FadeUpRevealProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   delay?: number;
   duration?: number;
@@ -235,19 +193,30 @@ export function FadeUpReveal({
   delay = 0,
   duration = 0.6,
 }: FadeUpRevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (!ref.current) return;
+
+    gsap.set(ref.current, { opacity: 0, y: 40 });
+
+    gsap.to(ref.current, {
+      opacity: 1,
+      y: 0,
+      duration,
+      delay,
+      ease: 'expo.out',
+      scrollTrigger: {
+        trigger: ref.current,
+        start: 'top bottom-=50px',
+        toggleActions: 'play none none none',
+      },
+    });
+  }, { dependencies: [delay, duration] });
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{
-        duration,
-        delay,
-        ease: [0.16, 1, 0.3, 1], // ease-out-expo
-      }}
-      className={className}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }

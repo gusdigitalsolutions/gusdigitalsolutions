@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect, type ReactNode } from 'react';
-import { motion, useSpring, useTransform, type MotionValue } from 'motion/react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { useDragGesture, useTouchDevice } from '../hooks/useTouchInteraction';
 
 interface MobileCardCarouselProps {
@@ -11,13 +12,6 @@ interface MobileCardCarouselProps {
   gap?: number;
   peekAmount?: number; // How much of next/prev card to show
 }
-
-// Spring config for snappy, natural feel
-const springConfig = {
-  stiffness: 300,
-  damping: 30,
-  mass: 0.8,
-};
 
 export default function MobileCardCarousel({
   children,
@@ -32,10 +26,11 @@ export default function MobileCardCarousel({
   const [cardWidth, setCardWidth] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const isTouchDevice = useTouchDevice();
 
-  // Spring-animated offset
-  const offset = useSpring(0, springConfig);
+  // Current offset value for GSAP animations
+  const offsetRef = useRef({ value: 0 });
 
   // Calculate card width on mount and resize
   useEffect(() => {
@@ -52,18 +47,54 @@ export default function MobileCardCarousel({
     return () => window.removeEventListener('resize', updateWidth);
   }, [peekAmount]);
 
+  // Animate to new offset with spring-like elastic ease
+  const animateToOffset = useCallback((targetOffset: number, immediate = false) => {
+    if (!trackRef.current) return;
+
+    if (immediate) {
+      gsap.set(trackRef.current, { x: targetOffset });
+      offsetRef.current.value = targetOffset;
+    } else {
+      gsap.to(trackRef.current, {
+        x: targetOffset,
+        duration: 0.5,
+        ease: 'elastic.out(1, 0.75)',
+        onUpdate: () => {
+          offsetRef.current.value = gsap.getProperty(trackRef.current!, 'x') as number;
+        },
+      });
+    }
+  }, []);
+
   // Update offset when active index changes
   useEffect(() => {
     const newOffset = -activeIndex * (cardWidth + gap);
-    offset.set(newOffset);
-  }, [activeIndex, cardWidth, gap, offset]);
+    animateToOffset(newOffset);
+  }, [activeIndex, cardWidth, gap, animateToOffset]);
+
+  // Animate card scale/opacity when activeIndex changes
+  useGSAP(() => {
+    cardRefs.current.forEach((cardEl, index) => {
+      if (!cardEl) return;
+
+      const isActive = index === activeIndex;
+      gsap.to(cardEl, {
+        scale: isActive ? 1 : 0.95,
+        opacity: isActive ? 1 : 0.7,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+    });
+  }, [activeIndex]);
 
   // Drag handling
   const dragState = useDragGesture(trackRef, {
     onDrag: (state) => {
       // Live drag feedback
       const baseOffset = -activeIndex * (cardWidth + gap);
-      offset.set(baseOffset + state.deltaX);
+      const newOffset = baseOffset + state.deltaX;
+      gsap.set(trackRef.current, { x: newOffset });
+      offsetRef.current.value = newOffset;
     },
     onDragEnd: (state) => {
       const threshold = cardWidth * 0.3; // 30% of card width to trigger change
@@ -77,11 +108,11 @@ export default function MobileCardCarousel({
           setActiveIndex((prev) => prev - 1);
         } else {
           // Snap back to current
-          offset.set(-activeIndex * (cardWidth + gap));
+          animateToOffset(-activeIndex * (cardWidth + gap));
         }
       } else {
         // Snap back to current
-        offset.set(-activeIndex * (cardWidth + gap));
+        animateToOffset(-activeIndex * (cardWidth + gap));
       }
     },
     axis: 'x',
@@ -128,30 +159,29 @@ export default function MobileCardCarousel({
         className="overflow-hidden"
         style={{ padding: `0 ${peekAmount}px` }}
       >
-        <motion.div
+        <div
           ref={trackRef}
           className="flex touch-pan-y"
           style={{
-            x: offset as MotionValue<number>,
             gap: `${gap}px`,
             cursor: dragState.isDragging ? 'grabbing' : 'grab',
           }}
         >
           {children.map((child, index) => (
-            <motion.div
+            <div
               key={index}
+              ref={(el) => { cardRefs.current[index] = el; }}
               className="flex-shrink-0"
-              style={{ width: cardWidth }}
-              animate={{
-                scale: index === activeIndex ? 1 : 0.95,
+              style={{
+                width: cardWidth,
                 opacity: index === activeIndex ? 1 : 0.7,
+                transform: `scale(${index === activeIndex ? 1 : 0.95})`,
               }}
-              transition={{ duration: 0.3 }}
             >
               {child}
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       {/* Navigation arrows */}
@@ -207,6 +237,8 @@ export default function MobileCardCarousel({
 // Swipe hint that shows on first view
 function SwipeHint() {
   const [showHint, setShowHint] = useState(false);
+  const hintRef = useRef<HTMLDivElement>(null);
+  const arrowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Only show if user hasn't seen it before
@@ -222,20 +254,53 @@ function SwipeHint() {
     }
   }, []);
 
+  // Animate hint on mount
+  useGSAP(() => {
+    if (!showHint || !hintRef.current) return;
+
+    // Entry animation
+    gsap.fromTo(
+      hintRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+    );
+
+    // Arrow repeating animation
+    if (arrowRef.current) {
+      gsap.to(arrowRef.current, {
+        x: 10,
+        repeat: -1,
+        yoyo: true,
+        duration: 0.75,
+        ease: 'power1.inOut',
+      });
+    }
+
+    // Exit animation before hiding
+    const exitTimer = setTimeout(() => {
+      if (hintRef.current) {
+        gsap.to(hintRef.current, {
+          opacity: 0,
+          y: 20,
+          duration: 0.3,
+          ease: 'power2.in',
+        });
+      }
+    }, 2700); // Start exit animation 300ms before hide
+
+    return () => clearTimeout(exitTimer);
+  }, [showHint]);
+
   if (!showHint) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
+    <div
+      ref={hintRef}
       className="absolute inset-x-0 bottom-20 flex justify-center pointer-events-none"
+      style={{ opacity: 0 }}
     >
       <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-dark-800/90 backdrop-blur-sm border border-dark-600/50 text-dark-300 text-sm">
-        <motion.div
-          animate={{ x: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        >
+        <div ref={arrowRef}>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -244,10 +309,10 @@ function SwipeHint() {
               d="M14 5l7 7m0 0l-7 7m7-7H3"
             />
           </svg>
-        </motion.div>
+        </div>
         <span>Swipe to explore</span>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -259,19 +324,28 @@ interface CarouselCardProps {
 
 export function CarouselCard({ children, className = '' }: CarouselCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [isPressed, setIsPressed] = useState(false);
+
+  const handleTouchStart = () => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, { scale: 0.98, duration: 0.15, ease: 'power2.out' });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, { scale: 1, duration: 0.15, ease: 'power2.out' });
+    }
+  };
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
       className={`h-full ${className}`}
-      animate={{ scale: isPressed ? 0.98 : 1 }}
-      transition={{ duration: 0.15 }}
-      onTouchStart={() => setIsPressed(true)}
-      onTouchEnd={() => setIsPressed(false)}
-      onTouchCancel={() => setIsPressed(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

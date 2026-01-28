@@ -1,5 +1,9 @@
-import { motion } from 'motion/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface TypewriterTextProps {
   words: string[];
@@ -83,31 +87,33 @@ interface FadeInTextProps {
 }
 
 export function FadeInText({ text, className = '', delay = 0, staggerDelay = 0.03 }: FadeInTextProps) {
+  const containerRef = useRef<HTMLSpanElement>(null);
+
+  useGSAP(() => {
+    if (!containerRef.current) return;
+
+    const chars = containerRef.current.querySelectorAll('.char');
+
+    gsap.set(chars, { opacity: 0, y: 20 });
+
+    gsap.to(chars, {
+      opacity: 1,
+      y: 0,
+      duration: 0.3,
+      stagger: staggerDelay,
+      delay: delay,
+      ease: 'power2.out',
+    });
+  }, [delay, staggerDelay]);
+
   return (
-    <motion.span
-      initial="hidden"
-      animate="visible"
-      className={className}
-    >
+    <span ref={containerRef} className={className}>
       {text.split('').map((char, index) => (
-        <motion.span
-          key={index}
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                delay: delay + index * staggerDelay,
-                duration: 0.3,
-              },
-            },
-          }}
-        >
+        <span key={index} className="char inline-block">
           {char === ' ' ? '\u00A0' : char}
-        </motion.span>
+        </span>
       ))}
-    </motion.span>
+    </span>
   );
 }
 
@@ -119,36 +125,43 @@ interface RevealTextProps {
 }
 
 export function RevealText({ text, className = '', delay = 0 }: RevealTextProps) {
+  const containerRef = useRef<HTMLSpanElement>(null);
   const words = text.split(' ');
 
+  useGSAP(() => {
+    if (!containerRef.current) return;
+
+    const wordElements = containerRef.current.querySelectorAll('.word');
+
+    gsap.set(wordElements, {
+      opacity: 0,
+      y: 30,
+      filter: 'blur(10px)'
+    });
+
+    gsap.to(wordElements, {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      duration: 0.5,
+      stagger: 0.1,
+      delay: delay,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top bottom-=50px',
+        toggleActions: 'play none none none',
+      },
+    });
+  }, [delay]);
+
   return (
-    <motion.span
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className={className}
-    >
+    <span ref={containerRef} className={className}>
       {words.map((word, index) => (
-        <motion.span
-          key={index}
-          className="inline-block mr-2"
-          variants={{
-            hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
-            visible: {
-              opacity: 1,
-              y: 0,
-              filter: 'blur(0px)',
-              transition: {
-                delay: delay + index * 0.1,
-                duration: 0.5,
-                ease: [0.25, 0.46, 0.45, 0.94],
-              },
-            },
-          }}
-        >
+        <span key={index} className="word inline-block mr-2">
           {word}
-        </motion.span>
+        </span>
       ))}
-    </motion.span>
+    </span>
   );
 }
