@@ -25,6 +25,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0EQYLTF8CZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0EQYLTF8CZ');
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
@@ -52,16 +61,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+  <!-- Preload hero video for LCP -->
+  <link rel="preload" as="video" href="/assets/videos/gusdigital-hero-1080p.mp4" type="video/mp4" />
+
   <!-- Canonical URL -->
   <link rel="canonical" href={canonicalURL} />
 
   <title>{title}</title>
 
-  <!-- Fonts - Optimized: preload critical weights -->
+  <!-- Fonts - Optimized: preload critical weights with font-display swap -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" /></noscript>
 
   <!-- JSON-LD Person Schema -->
   <script type="application/ld+json">
@@ -181,23 +193,23 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="absolute -bottom-40 left-1/4 w-[400px] h-[400px] bg-purple-500/12 rounded-full blur-[80px] animate-float-slow" style="animation-delay: -5s;"></div>
     </div>
 
-    <!-- Layer 2: Interactive Particle Network -->
+    <!-- Layer 2: Interactive Particle Network (client:visible for performance) -->
     <div class="absolute inset-0 z-[1]">
-      <ParticleBackground client:idle />
+      <ParticleBackground client:visible />
     </div>
 
-    <!-- Layer 3: Cyberpunk Data Streams -->
+    <!-- Layer 3: Cyberpunk Data Streams (reduced count, client:visible) -->
     <div class="absolute inset-0 z-[2]">
-      <DataStream client:idle streamCount={8} speed="slow" />
+      <DataStream client:visible streamCount={5} speed="slow" />
     </div>
   </div>
 
-  <!-- Custom Cursor Effects (hidden on touch devices) -->
-  <CursorGlow client:idle />
-  <CursorFollower client:idle />
+  <!-- Custom Cursor Effects (hidden on touch devices, loads on visibility) -->
+  <CursorGlow client:visible />
+  <CursorFollower client:visible />
 
   <!-- GSAP Scroll Animations Initializer -->
-  <ScrollAnimationsInit client:idle />
+  <ScrollAnimationsInit client:load />
 
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" aria-hidden="true"></div>

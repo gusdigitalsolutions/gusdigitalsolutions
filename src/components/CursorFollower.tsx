@@ -1,17 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, useSpring, useMotionValue } from 'motion/react';
+import gsap from 'gsap';
 import { useTouchDevice } from '../hooks/useTouchInteraction';
 
 interface CursorFollowerProps {
   className?: string;
 }
-
-// Spring config for smooth, natural cursor movement
-const springConfig = {
-  stiffness: 500,
-  damping: 28,
-  mass: 0.5,
-};
 
 export default function CursorFollower({ className = '' }: CursorFollowerProps) {
   const isTouchDevice = useTouchDevice();
@@ -20,20 +13,45 @@ export default function CursorFollower({ className = '' }: CursorFollowerProps) 
   const [isClicking, setIsClicking] = useState(false);
   const [hoverText, setHoverText] = useState<string | null>(null);
 
-  // Motion values for cursor position
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
+  // Refs for GSAP animation targets
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef({ x: -100, y: -100 });
 
-  // Spring-animated position for smooth following
-  const springX = useSpring(cursorX, springConfig);
-  const springY = useSpring(cursorY, springConfig);
+  // GSAP quickTo for smooth cursor following
+  const quickX = useRef<gsap.QuickToFunc | null>(null);
+  const quickY = useRef<gsap.QuickToFunc | null>(null);
+  const ringQuickX = useRef<gsap.QuickToFunc | null>(null);
+  const ringQuickY = useRef<gsap.QuickToFunc | null>(null);
+
+  // Initialize GSAP quickTo functions
+  useEffect(() => {
+    if (isTouchDevice || !dotRef.current || !ringRef.current) return;
+
+    quickX.current = gsap.quickTo(dotRef.current, 'x', { duration: 0.3, ease: 'power3.out' });
+    quickY.current = gsap.quickTo(dotRef.current, 'y', { duration: 0.3, ease: 'power3.out' });
+    ringQuickX.current = gsap.quickTo(ringRef.current, 'x', { duration: 0.5, ease: 'power3.out' });
+    ringQuickY.current = gsap.quickTo(ringRef.current, 'y', { duration: 0.5, ease: 'power3.out' });
+  }, [isTouchDevice]);
 
   // Track mouse movement
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    cursorX.set(e.clientX);
-    cursorY.set(e.clientY);
+    positionRef.current = { x: e.clientX, y: e.clientY };
+
+    if (quickX.current && quickY.current) {
+      quickX.current(e.clientX);
+      quickY.current(e.clientY);
+    }
+    if (ringQuickX.current && ringQuickY.current) {
+      ringQuickX.current(e.clientX);
+      ringQuickY.current(e.clientY);
+    }
+    if (labelRef.current) {
+      gsap.to(labelRef.current, { x: e.clientX, y: e.clientY, duration: 0.3, ease: 'power3.out' });
+    }
     setIsVisible(true);
-  }, [cursorX, cursorY]);
+  }, []);
 
   // Track mouse leave
   const handleMouseLeave = useCallback(() => {
@@ -48,6 +66,19 @@ export default function CursorFollower({ className = '' }: CursorFollowerProps) 
   const handleMouseUp = useCallback(() => {
     setIsClicking(false);
   }, []);
+
+  // Animate scale and opacity based on state
+  useEffect(() => {
+    if (!dotRef.current || !ringRef.current) return;
+
+    const dotScale = isClicking ? 0.8 : isHovering ? 1.5 : 1;
+    const ringScale = isClicking ? 0.9 : isHovering ? 1.2 : 1;
+    const opacity = isVisible ? 1 : 0;
+    const ringOpacity = isVisible ? 0.5 : 0;
+
+    gsap.to(dotRef.current, { scale: dotScale, opacity, duration: 0.15, ease: 'power2.out' });
+    gsap.to(ringRef.current, { scale: ringScale, opacity: ringOpacity, duration: 0.2, ease: 'power2.out' });
+  }, [isClicking, isHovering, isVisible]);
 
   // Detect hoverable elements
   useEffect(() => {
@@ -108,73 +139,52 @@ export default function CursorFollower({ className = '' }: CursorFollowerProps) 
   return (
     <>
       {/* Main cursor dot */}
-      <motion.div
+      <div
+        ref={dotRef}
         className={`fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference ${className}`}
-        style={{
-          x: springX,
-          y: springY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-        animate={{
-          scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
-          opacity: isVisible ? 1 : 0,
-        }}
-        transition={{ duration: 0.15 }}
+        style={{ transform: 'translate(-50%, -50%)', opacity: 0 }}
       >
         <div
           className={`rounded-full bg-white transition-all duration-150 ${
             isHovering ? 'w-12 h-12' : 'w-4 h-4'
           }`}
         />
-      </motion.div>
+      </div>
 
       {/* Outer ring */}
-      <motion.div
+      <div
+        ref={ringRef}
         className="fixed top-0 left-0 pointer-events-none z-[9998]"
-        style={{
-          x: springX,
-          y: springY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-        animate={{
-          scale: isClicking ? 0.9 : isHovering ? 1.2 : 1,
-          opacity: isVisible ? 0.5 : 0,
-        }}
-        transition={{ duration: 0.2 }}
+        style={{ transform: 'translate(-50%, -50%)', opacity: 0 }}
       >
         <div
           className={`rounded-full border-2 border-white/50 transition-all duration-200 ${
             isHovering ? 'w-16 h-16' : 'w-8 h-8'
           }`}
         />
-      </motion.div>
+      </div>
 
       {/* Hover text label */}
       {hoverText && (
-        <motion.div
+        <div
+          ref={labelRef}
           className="fixed top-0 left-0 pointer-events-none z-[9997]"
-          style={{
-            x: springX,
-            y: springY,
-          }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
+          style={{ opacity: 1 }}
         >
           <div className="ml-8 mt-2 px-3 py-1 bg-dark-800 text-dark-100 text-sm rounded-full whitespace-nowrap">
             {hoverText}
           </div>
-        </motion.div>
+        </div>
       )}
 
-      {/* Hide default cursor */}
-      <style>{`
-        * {
-          cursor: none !important;
-        }
-      `}</style>
+      {/* Hide default cursor only when custom cursor is visible */}
+      {isVisible && (
+        <style>{`
+          * {
+            cursor: none !important;
+          }
+        `}</style>
+      )}
     </>
   );
 }

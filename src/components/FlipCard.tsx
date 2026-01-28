@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback, type ReactNode, type MouseEvent, type TouchEvent } from 'react';
-import { motion, useSpring, useTransform, type MotionValue } from 'motion/react';
+import { useState, useRef, useCallback, useEffect, type ReactNode, type MouseEvent, type TouchEvent } from 'react';
+import gsap from 'gsap';
 
 interface FlipCardProps {
   front: ReactNode;
@@ -8,13 +8,6 @@ interface FlipCardProps {
   frontClassName?: string;
   backClassName?: string;
 }
-
-// Spring physics configuration
-const springConfig = {
-  stiffness: 150,
-  damping: 20,
-  mass: 0.5,
-};
 
 // Magnetic tilt configuration
 const TILT_MAX = 15; // degrees
@@ -30,19 +23,32 @@ export default function FlipCard({
   const [isFlipped, setIsFlipped] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLDivElement>(null);
 
-  // Spring values for smooth magnetic tilt
-  const rotateX = useSpring(0, springConfig);
-  const rotateY = useSpring(0, springConfig);
-  const scale = useSpring(1, springConfig);
+  // Apply flip animation when isFlipped changes
+  useEffect(() => {
+    if (!innerRef.current) return;
 
-  // Transform for subtle depth effect
-  const z = useTransform(scale, [1, 1.05], [0, 20]);
+    gsap.to(innerRef.current, {
+      rotateY: isFlipped ? 180 : 0,
+      duration: 0.6,
+      ease: 'back.out(1.2)',
+    });
+
+    // Fade indicator
+    if (indicatorRef.current) {
+      gsap.to(indicatorRef.current, {
+        opacity: isFlipped ? 0 : 0.6,
+        duration: 0.3,
+      });
+    }
+  }, [isFlipped]);
 
   // Handle mouse movement for magnetic tilt effect
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
-      if (!cardRef.current || isTouching) return;
+      if (!cardRef.current || !innerRef.current || isTouching) return;
 
       const rect = cardRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -52,23 +58,42 @@ export default function FlipCard({
       const deltaX = (e.clientX - centerX) / (rect.width / 2);
       const deltaY = (e.clientY - centerY) / (rect.height / 2);
 
-      // Apply magnetic tilt with boundaries
-      rotateY.set(deltaX * TILT_MAX * MAGNETIC_STRENGTH);
-      rotateX.set(-deltaY * TILT_MAX * MAGNETIC_STRENGTH);
+      // Apply magnetic tilt with boundaries (additive to flip rotation)
+      const tiltX = -deltaY * TILT_MAX * MAGNETIC_STRENGTH;
+      const tiltY = deltaX * TILT_MAX * MAGNETIC_STRENGTH + (isFlipped ? 180 : 0);
+
+      gsap.to(innerRef.current, {
+        rotateX: tiltX,
+        rotateY: tiltY,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
     },
-    [rotateX, rotateY, isTouching]
+    [isTouching, isFlipped]
   );
 
   const handleMouseEnter = useCallback(() => {
-    scale.set(1.02);
-  }, [scale]);
+    if (!innerRef.current) return;
+    gsap.to(innerRef.current, {
+      scale: 1.02,
+      z: 20,
+      duration: 0.3,
+      ease: 'power2.out',
+    });
+  }, []);
 
   const handleMouseLeave = useCallback(() => {
-    // Reset all transforms
-    rotateX.set(0);
-    rotateY.set(0);
-    scale.set(1);
-  }, [rotateX, rotateY, scale]);
+    if (!innerRef.current) return;
+    // Reset transforms but maintain flip state
+    gsap.to(innerRef.current, {
+      rotateX: 0,
+      rotateY: isFlipped ? 180 : 0,
+      scale: 1,
+      z: 0,
+      duration: 0.4,
+      ease: 'power2.out',
+    });
+  }, [isFlipped]);
 
   // Handle click/tap to flip
   const handleFlip = useCallback(() => {
@@ -76,21 +101,28 @@ export default function FlipCard({
   }, []);
 
   // Touch handlers for mobile
-  const handleTouchStart = useCallback(
-    (e: TouchEvent<HTMLDivElement>) => {
-      setIsTouching(true);
-      scale.set(0.98); // Slight press feedback
-    },
-    [scale]
-  );
+  const handleTouchStart = useCallback(() => {
+    setIsTouching(true);
+    if (!innerRef.current) return;
+    gsap.to(innerRef.current, {
+      scale: 0.98,
+      duration: 0.15,
+      ease: 'power2.out',
+    });
+  }, []);
 
   const handleTouchEnd = useCallback(() => {
     setIsTouching(false);
-    scale.set(1);
-  }, [scale]);
+    if (!innerRef.current) return;
+    gsap.to(innerRef.current, {
+      scale: 1,
+      duration: 0.15,
+      ease: 'power2.out',
+    });
+  }, []);
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
       className={`relative cursor-pointer ${className}`}
       style={{
@@ -104,27 +136,15 @@ export default function FlipCard({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <motion.div
+      <div
+        ref={innerRef}
         className="relative w-full h-full"
         style={{
           transformStyle: 'preserve-3d',
-          rotateX: rotateX as MotionValue<number>,
-          rotateY: rotateY as MotionValue<number>,
-          scale: scale as MotionValue<number>,
-          z: z as MotionValue<number>,
-        }}
-        animate={{
-          rotateY: isFlipped ? 180 : 0,
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 80,
-          damping: 14,
-          mass: 0.8,
         }}
       >
         {/* Front face */}
-        <motion.div
+        <div
           className={`absolute inset-0 backface-hidden ${frontClassName}`}
           style={{
             backfaceVisibility: 'hidden',
@@ -132,10 +152,10 @@ export default function FlipCard({
           }}
         >
           {front}
-        </motion.div>
+        </div>
 
         {/* Back face */}
-        <motion.div
+        <div
           className={`absolute inset-0 backface-hidden ${backClassName}`}
           style={{
             backfaceVisibility: 'hidden',
@@ -144,15 +164,14 @@ export default function FlipCard({
           }}
         >
           {back}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       {/* Flip indicator */}
-      <motion.div
+      <div
+        ref={indicatorRef}
         className="absolute bottom-3 right-3 text-dark-500 pointer-events-none z-10"
-        initial={{ opacity: 0.6 }}
-        whileHover={{ opacity: 1 }}
-        animate={{ opacity: isFlipped ? 0 : 0.6 }}
+        style={{ opacity: 0.6 }}
       >
         <svg
           className="w-5 h-5"
@@ -167,8 +186,8 @@ export default function FlipCard({
             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
           />
         </svg>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -272,7 +291,7 @@ export function ServiceFlipCard({
   showTimeline = true,
 }: ServiceFlipCardProps) {
   const iconNode = serviceIcons[icon] || serviceIcons.monitor;
-  
+
   // Helper for cross-page anchor links
   const getSafeHref = (href: string) => {
     if (typeof window === 'undefined') return href;
@@ -281,10 +300,6 @@ export function ServiceFlipCard({
   };
 
   const bookingUrl = "https://calendly.com/gus-gusdigitalsolutions/30min";
-  
-  // Custom flip state management for the "Book" button in parent
-  const [isManuallyFlipped, setIsManuallyFlipped] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   return (
     <FlipCard
@@ -299,9 +314,9 @@ export function ServiceFlipCard({
               <div className="absolute inset-0 bg-primary-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative z-10 text-primary-400">{iconNode}</div>
             </div>
-            
+
             <div className="flex items-center gap-3">
-              <a 
+              <a
                 href={bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -401,7 +416,7 @@ export function ServiceFlipCard({
               <svg className="w-3 h-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               Satisfaction Guaranteed
             </div>
-            
+
             <a
               href={getSafeHref('#contact')}
               className="relative z-20 pointer-events-auto inline-flex items-center justify-center gap-3 px-6 py-4 w-full bg-primary-600 hover:bg-primary-500 text-white rounded-2xl font-black text-sm uppercase tracking-tighter transition-all group/btn shadow-lg shadow-primary-900/20 active:scale-95"

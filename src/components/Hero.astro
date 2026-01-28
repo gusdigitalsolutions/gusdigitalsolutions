@@ -1,39 +1,22 @@
 ---
+import { Image } from 'astro:assets';
 import TypewriterText from './TypewriterText';
 
-const portfolioImages = [
-  'IMG_2710.png',
-  'lightcloud5132_Bold_graphic_poster_for_a_music_festival_strong__058ddf80-fb43-410f-b291-d5fab5978422.png',
-  'lightcloud5132_Both_characters_walk_forward_in_slow_motion_with_64cbbe77-6f92-4669-a333-5094d88f8eba.png',
-  'lightcloud5132_Cafe_laptop_work_from_anywhere_attractive_girl_w_e3dbdadb-da5b-40b6-a58e-5ccf33674dc6.png',
-  'lightcloud5132_Cinematic_portrait_of_a_street_dancer_in_New_Yor_6ac67d59-4a59-4b92-9087-60bc060579a0.png',
-  'lightcloud5132_Cyberpunk_street_market_in_the_rain_dense_crowd__a20dfb49-9d65-4444-8f96-59652fac8571.png',
-  'lightcloud5132_D_Pixar-style_character_turnaround_of_a_curious__d8b6ff1f-06f9-4dff-8ea0-dab1ff0af0cf.png',
-  'lightcloud5132_Dark_forest_with_bioluminescent_plants_and_a_lon_11c0efc6-1264-4258-bb30-055034755e18.png',
-  'lightcloud5132_Dynamic_anime-style_illustration_of_a_cyberpunk__4846b6cc-7493-4528-a3b0-a5e6f87da87f.png',
-  'lightcloud5132_Graffiti_mural_on_a_brick_wall_showing_a_roaring_ea5ff3f0-54ee-4499-b3df-197818cc49cb.png',
-  'lightcloud5132_Gym_squat__strength_ad_strong_fitness_girl_in_a__0147e4da-29a0-4f6a-a3c7-98757b1958db.png',
-  'lightcloud5132_Lipstick_application_close-up_beautiful_young_wo_1b205d52-efba-4832-87d0-79396dc048d1.png',
-  'lightcloud5132_Portrait_that_dissolves_into_glitch_fragments_an_8dc81c09-a4aa-4443-928b-389090d3393a.png',
-  'lightcloud5132_Product_shot_of_a_futuristic_sneaker_on_a_wet_re_3e249cc9-46ad-4951-8b86-0e868fa76bb0.png',
-  'lightcloud5132_Renaissance-style_portrait_of_a_modern_woman_in__ffdcfce6-a6e6-4205-9fe3-3852a659ba18.png',
-  'lightcloud5132_Rooftop_spin_in_dress_trendy_hot_girl_in_a_flowy_2af8ca77-cf6c-4a41-9279-94f8b53639d3.png',
-  'lightcloud5132_Soft_pastel_anime_slice-of-life_scene_of_two_fri_6447614a-cdc7-4646-b12f-489c567c3d40.png',
-  'lightcloud5132_Sunrise_beach_jog_fit_hot_girl_jogging_along_the_8ef722a4-df7d-49f7-a347-c06ea1aa8b3c.png',
-  'lightcloud5132_Whimsical_cartoon_city_street_at_golden_hour_rou_40498cfb-2808-4a26-a527-abfffcb78f97.png',
-  'lightcloud5132_a_really_cool_picture_cute_adorable_cat_e9f9c989-0e80-4711-ba9f-25dfc59c7dcd.png',
-  'lightcloud5132_a_really_cool_picture_of_a_dog_b95efa7d-4f3e-454b-8397-9432e9d0598e.png',
-  'lightcloud5132_both_runners_with_natural_jogging_motion_arms_pu_447e4e5b-650f-4d36-8220-595ea8129ba3.png',
-  'lightcloud5132_confident_fit_girl_in_sleek_black_athleisure_wal_e1fb7d82-28ef-4ca3-b095-23a005d60ce9.png',
-  'lightcloud5132_sleek_wireless_gaming_headset_floating_in_dark_v_c54cb27e-e65d-4440-a937-54f6b1b01b64.png'
-];
+// Import all portfolio images from src/assets/portfolio for Astro optimization
+const imageModules = import.meta.glob<{ default: ImageMetadata }>('../assets/portfolio/*.png', { eager: true });
+
+// Convert to array of image objects
+const portfolioImages = Object.entries(imageModules).map(([path, module]) => ({
+  src: module.default,
+  alt: path.split('/').pop()?.replace('.png', '').replace(/_/g, ' ') || 'Portfolio image'
+}));
 ---
 
 <section id="hero" class="relative w-full overflow-hidden flex flex-col items-center bg-transparent pt-16 md:pt-24 m-0 overflow-visible">
   
   <!-- BACKGROUND VIDEO (MAX VISIBILITY - MOBILE OPTIMIZED) -->
   <div class="relative w-full h-auto md:h-[85vh] overflow-hidden m-0 p-0 z-10">
-    <video class="w-full h-auto md:h-full md:object-cover" autoplay muted loop playsinline style="filter: contrast(1.1) brightness(1.1);">
+    <video class="w-full h-auto md:h-full md:object-cover" autoplay muted loop playsinline preload="metadata" style="filter: contrast(1.1) brightness(1.1);">
       <source src="/assets/videos/gusdigital-hero-1080p.mp4" type="video/mp4" />
     </video>
   </div>
@@ -74,7 +57,7 @@ const portfolioImages = [
             <!-- EXPERT BADGE (HORIZONTAL & TIGHT) -->
             <div class="flex items-center gap-1.5 py-1.5 px-3 bg-white/5 rounded-full border border-white/10 backdrop-blur-md mb-2 md:mb-5 transform-none rotate-0 min-w-[220px] md:min-w-[280px]">
               <span class="text-dark-300 text-[8px] md:text-[10px] font-bold uppercase tracking-widest opacity-60">Expert in:</span>
-              <TypewriterText client:load className="text-secondary-400 text-[8px] md:text-[10px] font-black uppercase tracking-widest whitespace-nowrap" words={['Marketing', 'SEO', 'Shopify', 'Web Design']} />
+              <TypewriterText client:visible className="text-secondary-400 text-[8px] md:text-[10px] font-black uppercase tracking-widest whitespace-nowrap" words={['Marketing', 'SEO', 'Shopify', 'Web Design']} />
             </div>
 
             <!-- CTA BUTTON -->
@@ -102,10 +85,20 @@ const portfolioImages = [
 
     <div id="gl-container" class="relative w-full overflow-hidden p-0 m-0 leading-none">
       <div id="gl-track" class="flex gap-10 md:gap-24 px-0 py-16 md:py-32 m-0 items-center cursor-grab active:cursor-grabbing select-none transition-none" style="touch-action: none; will-change: transform;">
-        {portfolioImages.map((src) => (
+        {portfolioImages.map((image) => (
           <div class="gl-item relative flex-shrink-0 p-0 m-0 leading-normal">
             <div class="relative w-[340px] h-[400px] md:w-[750px] md:h-[550px] lg:w-[1100px] lg:h-[700px] rounded-3xl md:rounded-[6rem] overflow-hidden border border-white/10 shadow-4xl group/card">
-              <img src={`/assets/portfolio/${src}`} class="w-full h-full object-cover scale-100 group-hover/card:scale-105 transition-transform duration-[4000ms]" draggable="false" loading="eager" />
+              <Image
+                src={image.src}
+                alt={image.alt}
+                widths={[340, 750, 1100]}
+                sizes="(max-width: 768px) 340px, (max-width: 1024px) 750px, 1100px"
+                format="webp"
+                quality={80}
+                class="w-full h-full object-cover scale-100 group-hover/card:scale-105 transition-transform duration-[4000ms]"
+                loading="lazy"
+                decoding="async"
+              />
               <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10 opacity-70 pointer-events-none"></div>
             </div>
           </div>

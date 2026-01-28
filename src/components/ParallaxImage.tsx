@@ -1,5 +1,9 @@
 import { useRef, useCallback, type MouseEvent } from 'react';
-import { motion, useSpring, useScroll, useTransform, type MotionValue } from 'motion/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ParallaxImageProps {
   src: string;
@@ -10,13 +14,6 @@ interface ParallaxImageProps {
   zoomOnHover?: boolean;
 }
 
-// Spring physics for smooth hover effects
-const springConfig = {
-  stiffness: 150,
-  damping: 20,
-  mass: 0.5,
-};
-
 export default function ParallaxImage({
   src,
   alt,
@@ -26,25 +23,34 @@ export default function ParallaxImage({
   zoomOnHover = true,
 }: ParallaxImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
 
-  // Scroll-based parallax
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start end', 'end start'],
-  });
+  // Scroll-based parallax with ScrollTrigger
+  useGSAP(() => {
+    if (!containerRef.current || !imageWrapperRef.current) return;
 
-  // Transform scroll progress to Y movement
-  const yParallax = useTransform(scrollYProgress, [0, 1], [100 * parallaxSpeed, -100 * parallaxSpeed]);
+    const yDistance = 100 * parallaxSpeed;
 
-  // Spring values for hover tilt effect
-  const rotateX = useSpring(0, springConfig);
-  const rotateY = useSpring(0, springConfig);
-  const scale = useSpring(1, springConfig);
+    gsap.fromTo(
+      imageWrapperRef.current,
+      { y: yDistance },
+      {
+        y: -yDistance,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      }
+    );
+  }, { scope: containerRef, dependencies: [parallaxSpeed] });
 
   // Handle mouse movement for tilt effect
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
-      if (!containerRef.current || !tiltOnHover) return;
+      if (!containerRef.current || !imageWrapperRef.current || !tiltOnHover) return;
 
       const rect = containerRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -54,45 +60,52 @@ export default function ParallaxImage({
       const deltaX = (e.clientX - centerX) / (rect.width / 2);
       const deltaY = (e.clientY - centerY) / (rect.height / 2);
 
-      // Apply tilt (inverted for natural feel)
-      rotateY.set(deltaX * 8);
-      rotateX.set(-deltaY * 8);
+      // Apply tilt with spring-like physics
+      gsap.to(imageWrapperRef.current, {
+        rotateY: deltaX * 8,
+        rotateX: -deltaY * 8,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
     },
-    [rotateX, rotateY, tiltOnHover]
+    [tiltOnHover]
   );
 
   const handleMouseEnter = useCallback(() => {
+    if (!imageWrapperRef.current) return;
     if (zoomOnHover) {
-      scale.set(1.05);
+      gsap.to(imageWrapperRef.current, {
+        scale: 1.05,
+        duration: 0.4,
+        ease: 'power2.out',
+      });
     }
-  }, [scale, zoomOnHover]);
+  }, [zoomOnHover]);
 
   const handleMouseLeave = useCallback(() => {
-    rotateX.set(0);
-    rotateY.set(0);
-    scale.set(1);
-  }, [rotateX, rotateY, scale]);
+    if (!imageWrapperRef.current) return;
+    gsap.to(imageWrapperRef.current, {
+      rotateX: 0,
+      rotateY: 0,
+      scale: 1,
+      duration: 0.5,
+      ease: 'elastic.out(1, 0.5)',
+    });
+  }, []);
 
   return (
-    <motion.div
+    <div
       ref={containerRef}
       className={`relative overflow-hidden ${className}`}
-      style={{
-        perspective: 1000,
-      }}
+      style={{ perspective: 1000 }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <motion.div
-        style={{
-          y: yParallax as MotionValue<number>,
-          rotateX: rotateX as MotionValue<number>,
-          rotateY: rotateY as MotionValue<number>,
-          scale: scale as MotionValue<number>,
-          transformStyle: 'preserve-3d',
-        }}
+      <div
+        ref={imageWrapperRef}
         className="w-full h-full"
+        style={{ transformStyle: 'preserve-3d' }}
       >
         <img
           src={src}
@@ -100,11 +113,11 @@ export default function ParallaxImage({
           className="w-full h-full object-cover"
           loading="lazy"
         />
-      </motion.div>
+      </div>
 
       {/* Gradient overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-t from-dark-900/30 to-transparent pointer-events-none" />
-    </motion.div>
+    </div>
   );
 }
 
@@ -125,20 +138,35 @@ export function ParallaxSection({
   parallaxSpeed = 0.5,
 }: ParallaxSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  });
+  useGSAP(() => {
+    if (!sectionRef.current || !bgRef.current) return;
 
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', `${parallaxSpeed * 50}%`]);
+    const distance = parallaxSpeed * 50;
+
+    gsap.fromTo(
+      bgRef.current,
+      { yPercent: 0 },
+      {
+        yPercent: distance,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      }
+    );
+  }, { scope: sectionRef, dependencies: [parallaxSpeed] });
 
   return (
     <div ref={sectionRef} className={`relative overflow-hidden ${className}`}>
       {/* Parallax background */}
-      <motion.div
+      <div
+        ref={bgRef}
         className="absolute inset-0 -top-[20%] -bottom-[20%]"
-        style={{ y }}
       >
         <img
           src={backgroundSrc}
@@ -146,7 +174,7 @@ export function ParallaxSection({
           className="w-full h-full object-cover"
           loading="lazy"
         />
-      </motion.div>
+      </div>
 
       {/* Overlay */}
       <div

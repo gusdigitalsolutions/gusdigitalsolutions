@@ -1,5 +1,5 @@
 import { useRef, useCallback, type ReactNode, type MouseEvent } from 'react';
-import { motion, useSpring, type MotionValue } from 'motion/react';
+import gsap from 'gsap';
 
 interface MagneticButtonProps {
   children: ReactNode;
@@ -10,13 +10,6 @@ interface MagneticButtonProps {
   scaleOnHover?: number;
 }
 
-// Spring physics configuration for smooth magnetic effect
-const springConfig = {
-  stiffness: 200,
-  damping: 20,
-  mass: 0.5,
-};
-
 export default function MagneticButton({
   children,
   className = '',
@@ -26,16 +19,12 @@ export default function MagneticButton({
   scaleOnHover = 1.05,
 }: MagneticButtonProps) {
   const buttonRef = useRef<HTMLDivElement>(null);
-
-  // Spring values for smooth magnetic movement
-  const x = useSpring(0, springConfig);
-  const y = useSpring(0, springConfig);
-  const scale = useSpring(1, springConfig);
+  const innerRef = useRef<HTMLDivElement | HTMLAnchorElement>(null);
 
   // Handle mouse movement for magnetic attraction
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
-      if (!buttonRef.current) return;
+      if (!buttonRef.current || !innerRef.current) return;
 
       const rect = buttonRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -45,54 +34,75 @@ export default function MagneticButton({
       const deltaX = e.clientX - centerX;
       const deltaY = e.clientY - centerY;
 
-      // Apply magnetic attraction (follows cursor)
-      x.set(deltaX * magneticStrength);
-      y.set(deltaY * magneticStrength);
+      // Apply magnetic attraction with GSAP spring-like ease
+      gsap.to(innerRef.current, {
+        x: deltaX * magneticStrength,
+        y: deltaY * magneticStrength,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
     },
-    [x, y, magneticStrength]
+    [magneticStrength]
   );
 
   const handleMouseEnter = useCallback(() => {
-    scale.set(scaleOnHover);
-  }, [scale, scaleOnHover]);
+    if (!innerRef.current) return;
+    gsap.to(innerRef.current, {
+      scale: scaleOnHover,
+      duration: 0.3,
+      ease: 'power2.out',
+    });
+  }, [scaleOnHover]);
 
   const handleMouseLeave = useCallback(() => {
+    if (!innerRef.current) return;
     // Reset position and scale
-    x.set(0);
-    y.set(0);
-    scale.set(1);
-  }, [x, y, scale]);
+    gsap.to(innerRef.current, {
+      x: 0,
+      y: 0,
+      scale: 1,
+      duration: 0.4,
+      ease: 'elastic.out(1, 0.5)',
+    });
+  }, []);
 
   const handleClick = useCallback(() => {
+    if (!innerRef.current) return;
+    // Click animation
+    gsap.to(innerRef.current, {
+      scale: 0.95,
+      duration: 0.1,
+      ease: 'power2.in',
+      onComplete: () => {
+        gsap.to(innerRef.current, {
+          scale: scaleOnHover,
+          duration: 0.2,
+          ease: 'power2.out',
+        });
+      },
+    });
     if (onClick) onClick();
-  }, [onClick]);
+  }, [onClick, scaleOnHover]);
 
-  const Component = href ? motion.a : motion.div;
-  const componentProps = href ? { href } : {};
+  const InnerComponent = href ? 'a' : 'div';
 
   return (
-    <motion.div
+    <div
       ref={buttonRef}
       className="inline-block"
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Component
-        {...componentProps}
-        className={`inline-block cursor-pointer ${className}`}
-        style={{
-          x: x as MotionValue<number>,
-          y: y as MotionValue<number>,
-          scale: scale as MotionValue<number>,
-        }}
+      <InnerComponent
+        ref={innerRef as any}
+        href={href}
+        className={`inline-block cursor-pointer transform-gpu ${className}`}
         onClick={handleClick}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       >
         {children}
-      </Component>
-    </motion.div>
+      </InnerComponent>
+    </div>
   );
 }
 

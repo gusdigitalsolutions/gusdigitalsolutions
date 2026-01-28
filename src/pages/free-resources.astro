@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import SectionHeader from '../components/SectionHeader.astro';
+
 
 const communities = [
   {
@@ -63,7 +63,7 @@ const communities = [
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            class="group relative reveal flex flex-col h-full"
+            class="group relative flex flex-col h-full"
             style={`transition-delay: ${index * 150}ms`}
           >
             <div class="relative flex flex-col h-full p-6 md:p-8 rounded-[2rem] bg-white/[0.03] border border-white/5 backdrop-blur-3xl hover:bg-white/[0.06] hover:border-primary-500/40 transition-all duration-700 overflow-hidden shadow-2xl">
